@@ -1,0 +1,19 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    bootstrapFiles:
+        - vendor/cakephp/cakephp/src/functions.php
+    excludePaths:
+        - tests/Fixture/*
+    ignoreErrors:
+        # CakePHP components are loaded dynamically via __get magic method
+        - '#Access to an undefined property [a-zA-Z0-9\\]+Controller::\$Authentication#'
+        # EntityInterface doesn't define specific properties, but entities do
+        - '#Access to an undefined property Cake\\Datasource\\EntityInterface::\$[a-zA-Z0-9_]+#'
+        # Ignore generic interface warnings for CakePHP plugin applications
+        - '#Method .+::bootstrap\(\) has parameter \$app with generic interface#'
+        # CakePHP Table generic type annotation for Psalm compatibility
+        - '#Type .+ in generic type .+ in PHPDoc tag @extends is not subtype of template type#'
+    treatPhpDocTypesAsCertain: false
+

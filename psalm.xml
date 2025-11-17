@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="8"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+    
+    <issueHandlers>
+        <!-- CakePHP components are loaded via __get magic method -->
+        <UndefinedMagicPropertyFetch>
+            <errorLevel type="suppress">
+                <referencedProperty name="Brammo\Auth\Controller\*Controller::$Authentication" />
+                <referencedProperty name="Brammo\Auth\Controller\*Controller::$Flash" />
+            </errorLevel>
+        </UndefinedMagicPropertyFetch>
+        
+        <!-- CakePHP entities have dynamic properties -->
+        <MissingPropertyType>
+            <errorLevel type="suppress">
+                <directory name="src/Model/Entity" />
+            </errorLevel>
+        </MissingPropertyType>
+        
+        <!-- EntityInterface doesn't define specific properties -->
+        <UndefinedPropertyFetch>
+            <errorLevel type="suppress">
+                <referencedProperty name="Cake\Datasource\EntityInterface::$password" />
+            </errorLevel>
+        </UndefinedPropertyFetch>
+        
+        <!-- CakePHP's __ function is loaded at runtime -->
+        <UndefinedFunction>
+            <errorLevel type="suppress">
+                <referencedFunction name="Brammo\Auth\Controller\__" />
+            </errorLevel>
+        </UndefinedFunction>
+        
+        <!-- CakePHP Table generic type - suppress for UsersTable -->
+        <MissingTemplateParam>
+            <errorLevel type="suppress">
+                <file name="src/Model/Table/UsersTable.php" />
+            </errorLevel>
+        </MissingTemplateParam>
+    </issueHandlers>
+</psalm>
