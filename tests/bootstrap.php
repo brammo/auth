@@ -5,8 +5,12 @@ declare(strict_types=1);
  * Test suite bootstrap for Brammo/Auth plugin
  */
 
+// Configure cache
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
+use Cake\Utility\Security;
 
 // Load composer autoloader
 $root = dirname(__DIR__);
@@ -20,6 +24,7 @@ if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
+// Configure paths
 define('ROOT', $root);
 define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
@@ -42,27 +47,15 @@ foreach ($dirs as $dir) {
     }
 }
 
-// Configure paths
-Configure::write('App', [
-    'namespace' => 'TestApp',
-    'encoding' => 'UTF-8',
-    'defaultLocale' => 'en_US',
-    'defaultTimezone' => 'UTC',
-    'paths' => [
-        'plugins' => [ROOT . DS . 'vendor' . DS, ROOT . DS],
-        'templates' => [APP . 'templates' . DS],
-    ],
-]);
+/*
+ * Initializes default Config store and loads the main configuration file
+ */
 
-Configure::write('debug', true);
+Configure::config('default', new PhpConfig());
+Configure::load('app', 'default', false);
 
 // Configure security salt for testing
-use Cake\Utility\Security;
-
 Security::setSalt('__REPLACE_WITH_LONG_RANDOM_STRING_FOR_TESTING__1234567890abcdef');
-
-// Configure cache
-use Cake\Cache\Cache;
 
 Cache::setConfig('_cake_translations_', [
     'className' => 'File',

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 return [
     'debug' => true,
-    
+
     'App' => [
         'namespace' => 'TestApp',
         'encoding' => 'UTF-8',
@@ -34,10 +34,6 @@ return [
         'skipLog' => [],
         'log' => true,
         'trace' => true,
-        'ignoredDeprecationPaths' => [
-            // Since 3.3.0: loadIdentifier() usage is deprecated. Directly pass `'identifier'` config to the Authenticator.
-            // but still used in CakePHP AuthenticationService
-            'vendor/cakephp/authentication/src/AuthenticationService.php'
-        ],
+        'ignoredDeprecationPaths' => [],
     ],
 ];
