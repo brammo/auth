@@ -37,7 +37,7 @@ class UsersTableTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
         $this->Users = TableRegistry::getTableLocator()->get('Users', $config);
     }
@@ -50,7 +50,7 @@ class UsersTableTest extends TestCase
     protected function tearDown(): void
     {
         unset($this->Users);
-        
+
         parent::tearDown();
     }
 
@@ -64,7 +64,7 @@ class UsersTableTest extends TestCase
         $this->assertEquals('users', $this->Users->getTable());
         $this->assertEquals('id', $this->Users->getPrimaryKey());
         $this->assertEquals('name', $this->Users->getDisplayField());
-        
+
         // Test behaviors
         $this->assertTrue($this->Users->hasBehavior('Timestamp'));
     }
@@ -78,9 +78,9 @@ class UsersTableTest extends TestCase
     {
         $user = $this->Users->newEmptyEntity();
         $user = $this->Users->patchEntity($user, []);
-        
+
         $errors = $user->getErrors();
-        
+
         // Should have errors for required fields
         $this->assertArrayHasKey('name', $errors);
         $this->assertArrayHasKey('email', $errors);
@@ -98,9 +98,9 @@ class UsersTableTest extends TestCase
             'email' => 'newuser@example.com',
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
-        
+
         $this->assertEmpty($user->getErrors());
         $this->assertEquals('New User', $user->name);
         $this->assertEquals('newuser@example.com', $user->email);
@@ -118,9 +118,9 @@ class UsersTableTest extends TestCase
             'email' => 'invalid-email',
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
-        
+
         $errors = $user->getErrors();
         $this->assertArrayHasKey('email', $errors);
     }
@@ -138,10 +138,10 @@ class UsersTableTest extends TestCase
             'email' => 'test@example.com', // This email already exists in fixtures
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
         $result = $this->Users->save($user);
-        
+
         // Save should fail due to unique constraint
         $this->assertFalse($result);
         $this->assertArrayHasKey('email', $user->getErrors());
@@ -158,9 +158,9 @@ class UsersTableTest extends TestCase
             'name' => 'Test User',
             'email' => 'test2@example.com',
         ];
-        
+
         $user = $this->Users->newEntity($data);
-        
+
         // Password is required on create but can be empty (for password hashing)
         // The validation is set to allowEmptyString
         $this->assertEmpty($user->getErrors());
@@ -178,10 +178,10 @@ class UsersTableTest extends TestCase
             'email' => 'savetest@example.com',
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
         $result = $this->Users->save($user);
-        
+
         $this->assertInstanceOf(User::class, $result);
         $this->assertNotNull($result->id);
         $this->assertEquals('Save Test User', $result->name);
@@ -197,7 +197,7 @@ class UsersTableTest extends TestCase
         $user = $this->Users->find()
             ->where(['email' => 'test@example.com'])
             ->first();
-        
+
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('Test User', $user->name);
     }
@@ -211,9 +211,9 @@ class UsersTableTest extends TestCase
     {
         $user = $this->Users->get(1);
         $user->name = 'Updated Name';
-        
+
         $result = $this->Users->save($user);
-        
+
         $this->assertInstanceOf(User::class, $result);
         $this->assertEquals('Updated Name', $result->name);
     }
@@ -227,9 +227,9 @@ class UsersTableTest extends TestCase
     {
         $user = $this->Users->get(1);
         $result = $this->Users->delete($user);
-        
+
         $this->assertTrue($result);
-        
+
         // Verify user is deleted
         $count = $this->Users->find()->where(['id' => 1])->count();
         $this->assertEquals(0, $count);
@@ -247,10 +247,10 @@ class UsersTableTest extends TestCase
             'email' => 'timestamp@example.com',
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
         $user = $this->Users->save($user);
-        
+
         // Timestamps should be automatically set
         $this->assertNotNull($user->created);
         $this->assertNotNull($user->modified);
@@ -268,9 +268,9 @@ class UsersTableTest extends TestCase
             'email' => 'longname@example.com',
             'password' => 'password123',
         ];
-        
+
         $user = $this->Users->newEntity($data);
-        
+
         $errors = $user->getErrors();
         $this->assertArrayHasKey('name', $errors);
     }
@@ -287,9 +287,9 @@ class UsersTableTest extends TestCase
             'email' => 'longpass@example.com',
             'password' => str_repeat('a', 256), // 256 characters, max is 255
         ];
-        
+
         $user = $this->Users->newEntity($data);
-        
+
         $errors = $user->getErrors();
         $this->assertArrayHasKey('password', $errors);
     }

@@ -26,7 +26,7 @@ class UserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->User = new User([
             'id' => 1,
             'email' => 'test@example.com',
@@ -43,7 +43,7 @@ class UserTest extends TestCase
     protected function tearDown(): void
     {
         unset($this->User);
-        
+
         parent::tearDown();
     }
 
@@ -55,14 +55,14 @@ class UserTest extends TestCase
     public function testAccessibleFields(): void
     {
         $user = new User();
-        
+
         // Test that accessible fields can be set
         $this->assertTrue($user->isAccessible('email'));
         $this->assertTrue($user->isAccessible('password'));
         $this->assertTrue($user->isAccessible('name'));
         $this->assertTrue($user->isAccessible('created'));
         $this->assertTrue($user->isAccessible('modified'));
-        
+
         // Test that id is not accessible by default
         $this->assertFalse($user->isAccessible('id'));
     }
@@ -75,10 +75,10 @@ class UserTest extends TestCase
     public function testHiddenFields(): void
     {
         $array = $this->User->toArray();
-        
+
         // Password should be hidden
         $this->assertArrayNotHasKey('password', $array);
-        
+
         // Other fields should be present
         $this->assertArrayHasKey('id', $array);
         $this->assertArrayHasKey('email', $array);
@@ -94,10 +94,10 @@ class UserTest extends TestCase
     {
         $json = json_encode($this->User);
         $data = json_decode($json, true);
-        
+
         // Password should not be in JSON
         $this->assertArrayNotHasKey('password', $data);
-        
+
         // Other fields should be present
         $this->assertEquals(1, $data['id']);
         $this->assertEquals('test@example.com', $data['email']);
@@ -129,9 +129,9 @@ class UserTest extends TestCase
             'name' => 'New User',
             'password' => 'newpassword',
         ];
-        
+
         $user = new User($data);
-        
+
         $this->assertEquals('new@example.com', $user->email);
         $this->assertEquals('New User', $user->name);
         $this->assertEquals('newpassword', $user->password);
@@ -149,9 +149,9 @@ class UserTest extends TestCase
             'email' => 'test@example.com',
             'name' => 'Test User',
         ];
-        
+
         $user = new User($data, ['guard' => true]);
-        
+
         // ID should not be set via mass assignment when guard is enabled
         // Note: CakePHP allows setting it unless guard is true
         $this->assertNull($user->id);
@@ -166,7 +166,7 @@ class UserTest extends TestCase
     {
         $this->User->email = 'updated@example.com';
         $this->User->name = 'Updated Name';
-        
+
         $this->assertEquals('updated@example.com', $this->User->email);
         $this->assertEquals('Updated Name', $this->User->name);
     }

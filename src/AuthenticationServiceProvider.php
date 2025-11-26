@@ -14,7 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class AuthenticationServiceProvider implements AuthenticationServiceProviderInterface
 {
- 
     /**
      * Returns a service provider instance.
      *

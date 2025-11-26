@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace TestApp;
 
-use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
+use Brammo\Auth\AuthenticationServiceProvider;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
-use Cake\Core\Exception\CakeException;
 use Cake\Datasource\FactoryLocator;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -33,7 +32,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function bootstrap(): void
     {
         parent::bootstrap();
-        
+
         $this->addPlugin('Brammo/Auth');
     }
 
@@ -62,8 +61,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
-        $provider = new \Brammo\Auth\AuthenticationServiceProvider();
-        
+        $provider = new AuthenticationServiceProvider();
+
         return $provider->getAuthenticationService($request);
     }
 

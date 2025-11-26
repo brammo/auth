@@ -5,7 +5,6 @@ namespace Brammo\Auth\Test\TestCase;
 
 use Brammo\Auth\Plugin;
 use Cake\Core\Configure;
-use Cake\Core\Plugin as CorePlugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -38,7 +37,7 @@ class PluginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->app = new Application(CONFIG);
         $this->Plugin = new Plugin();
     }
@@ -52,7 +51,7 @@ class PluginTest extends TestCase
     {
         unset($this->Plugin, $this->app);
         Configure::clear();
-        
+
         parent::tearDown();
     }
 
@@ -65,10 +64,10 @@ class PluginTest extends TestCase
     {
         // Clear any existing configuration
         Configure::delete('Auth');
-        
+
         // Bootstrap the plugin
         $this->Plugin->bootstrap($this->app);
-        
+
         // Verify that configuration was loaded
         $this->assertNotNull(Configure::read('Auth'));
         $this->assertEquals('Brammo/Auth.Users', Configure::read('Auth.Users.table'));
@@ -89,19 +88,19 @@ class PluginTest extends TestCase
         Configure::write('Auth.Users.controller', 'Brammo/Auth.User');
         Configure::write('Auth.Routes.login', '/login');
         Configure::write('Auth.Routes.logout', '/logout');
-        
+
         // Create a route builder
         Router::reload();
         $routes = Router::createRouteBuilder('/');
-        
+
         // Call the routes method
         $this->Plugin->routes($routes);
-        
+
         // Parse the routes
         $routes->scope('/', function (RouteBuilder $builder): void {
             // Additional routes can be added here
         });
-        
+
         // Verify routes were added
         $url = Router::url(['controller' => 'User', 'action' => 'login', 'plugin' => 'Brammo/Auth']);
         $this->assertIsString($url);
@@ -118,14 +117,14 @@ class PluginTest extends TestCase
         Configure::write('Auth.Users.controller', 'Brammo/Auth.User');
         Configure::write('Auth.Routes.login', '/custom-login');
         Configure::write('Auth.Routes.logout', '/custom-logout');
-        
+
         // Create a route builder
         Router::reload();
         $routes = Router::createRouteBuilder('/');
-        
+
         // Call the routes method
         $this->Plugin->routes($routes);
-        
+
         // Verify configuration was read correctly
         $this->assertEquals('/custom-login', Configure::read('Auth.Routes.login'));
         $this->assertEquals('/custom-logout', Configure::read('Auth.Routes.logout'));

@@ -28,7 +28,7 @@ class AuthenticationServiceProviderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Set up authentication configuration
         Configure::write('Auth.Authentication.fields', [
             'username' => 'email',
@@ -39,7 +39,7 @@ class AuthenticationServiceProviderTest extends TestCase
         Configure::write('Auth.Authentication.passwordHasher', [
             'className' => 'Authentication.Default',
         ]);
-        
+
         $this->provider = new AuthenticationServiceProvider();
     }
 
@@ -52,7 +52,7 @@ class AuthenticationServiceProviderTest extends TestCase
     {
         unset($this->provider);
         Configure::clear();
-        
+
         parent::tearDown();
     }
 
@@ -64,9 +64,9 @@ class AuthenticationServiceProviderTest extends TestCase
     public function testGetAuthenticationService(): void
     {
         $request = ServerRequestFactory::fromGlobals();
-        
+
         $service = $this->provider->getAuthenticationService($request);
-        
+
         $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
     }
 
@@ -78,12 +78,12 @@ class AuthenticationServiceProviderTest extends TestCase
     public function testAuthenticationServiceConfiguration(): void
     {
         $request = ServerRequestFactory::fromGlobals();
-        
+
         $service = $this->provider->getAuthenticationService($request);
-        
+
         // Test that the service is properly configured by attempting to use it
         $result = $service->authenticate($request);
-        
+
         // Should not be authenticated with empty request
         $this->assertFalse($result->isValid());
     }
@@ -102,11 +102,11 @@ class AuthenticationServiceProviderTest extends TestCase
         ]);
         Configure::write('Auth.Routes.login', '/custom-login');
         Configure::write('Auth.Users.table', 'CustomUsers');
-        
+
         $request = ServerRequestFactory::fromGlobals();
-        
+
         $service = $this->provider->getAuthenticationService($request);
-        
+
         $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
     }
 
@@ -128,11 +128,11 @@ class AuthenticationServiceProviderTest extends TestCase
                 ],
             ],
         ]);
-        
+
         $request = ServerRequestFactory::fromGlobals();
-        
+
         $service = $this->provider->getAuthenticationService($request);
-        
+
         $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
     }
 }

@@ -7,14 +7,17 @@ use Cake\Controller\Controller;
 
 /**
  * Application Controller
- * 
+ *
  * Base controller class for the Brammo/Auth plugin.
+ *
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
+ * @property \Cake\Controller\Component\FlashComponent $Flash
  */
 class AppController extends Controller
 {
     /**
      * Initialization
-     * 
+     *
      * @return void
      */
     public function initialize(): void
@@ -23,7 +26,7 @@ class AppController extends Controller
 
         // Load the Authentication component
         $this->loadComponent('Authentication.Authentication');
-        
+
         // Load Flash component for flash messages
         $this->loadComponent('Flash');
     }

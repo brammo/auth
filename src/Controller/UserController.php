@@ -3,25 +3,24 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Controller;
 
-use Brammo\Auth\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
 
 /**
  * Auth User Controller
- * 
+ *
  * Handles user authentication actions such as login and logout.
  */
 class UserController extends AppController
 {
     /**
      * Called before the controller action
-     * 
+     *
      * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event An Event instance
-     * @return \Cake\Http\Response|null|void
+     * @return void
      */
-    public function beforeFilter(EventInterface $event)
+    public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
 
@@ -30,7 +29,7 @@ class UserController extends AppController
 
     /**
      * Displays user login form
-     * 
+     *
      * @return \Cake\Http\Response|null Response with redirection on success login
      */
     public function login(): ?Response
@@ -41,13 +40,13 @@ class UserController extends AppController
 
         // If the user is logged in, redirect to the configured location
         if ($result && $result->isValid()) {
-
             $this->rehashUserPassword();
 
             // Redirect to the originally intended URL or default location defined in configuration
-            $redirectUrl = $this->request->getQuery('redirect',
+            $redirectUrl = $this->request->getQuery(
+                'redirect',
                 $this->Authentication->getLoginRedirect() ??
-                Configure::read('Auth.Routes.loginRedirect', '/')
+                Configure::read('Auth.Routes.loginRedirect', '/'),
             );
 
             return $this->redirect($redirectUrl);
@@ -62,13 +61,13 @@ class UserController extends AppController
         if ($template) {
             $this->viewBuilder()->setTemplate($template);
         }
-        
+
         return null;
     }
 
     /**
      * Logs out the user
-     * 
+     *
      * @return \Cake\Http\Response Response with redirection
      */
     public function logout(): ?Response
@@ -77,23 +76,22 @@ class UserController extends AppController
 
         // Redirect to the login page after logout
         $loginUrl = Configure::read('Auth.Routes.login', '/login');
-        
+
         return $this->redirect($loginUrl);
     }
 
     /**
      * Rehash password if needed
-     * 
+     *
      * @return void
      */
-    private function rehashUserPassword()
+    private function rehashUserPassword(): void
     {
         // Get the authentication service
         $authentication = $this->Authentication->getAuthenticationService();
 
         // Check if the password needs rehashing
         if ($authentication->identifiers()->get('Password')->needsPasswordRehash()) {
-
             // Get the currently logged-in user's ID
             $userId = $authentication->getIdentity()->getIdentifier();
 

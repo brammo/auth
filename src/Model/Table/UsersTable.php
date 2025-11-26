@@ -23,7 +23,6 @@ use Cake\Validation\Validator;
  * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User> saveManyOrFail(iterable $entities, array $options = [])
  * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User>|false deleteMany(iterable $entities, array $options = [])
  * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User> deleteManyOrFail(iterable $entities, array $options = [])
- *
  * @extends \Cake\ORM\Table<\Brammo\Auth\Model\Entity\User>
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */

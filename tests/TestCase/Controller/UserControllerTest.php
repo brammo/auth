@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Test\TestCase\Controller;
 
-use Brammo\Auth\Controller\UserController;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
@@ -34,7 +33,7 @@ class UserControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Set up authentication configuration
         Configure::write('Auth.Users.controller', 'Brammo/Auth.User');
         Configure::write('Auth.Users.table', 'Brammo/Auth.Users');
@@ -70,7 +69,7 @@ class UserControllerTest extends TestCase
     public function testLoginGet(): void
     {
         $this->get('/login');
-        
+
         $this->assertResponseOk();
     }
 
@@ -83,12 +82,12 @@ class UserControllerTest extends TestCase
     {
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
-        
+
         $this->assertRedirect('/');
     }
 
@@ -101,12 +100,12 @@ class UserControllerTest extends TestCase
     {
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'wrongpassword',
         ]);
-        
+
         $this->assertResponseOk();
         // Flash messages don't persist in integration tests without session middleware
         // $this->assertFlashMessage('Invalid email or password', 'error');
@@ -121,12 +120,12 @@ class UserControllerTest extends TestCase
     {
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login?redirect=/dashboard', [
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
-        
+
         $this->assertRedirect('/dashboard');
     }
 
@@ -138,15 +137,15 @@ class UserControllerTest extends TestCase
     public function testLoginWithCustomRedirectFromConfig(): void
     {
         Configure::write('Auth.Routes.loginRedirect', '/admin/dashboard');
-        
+
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
-        
+
         $this->assertRedirect('/admin/dashboard');
     }
 
@@ -160,15 +159,15 @@ class UserControllerTest extends TestCase
         // First login
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
-        
+
         // Then logout
         $this->get('/logout');
-        
+
         $this->assertRedirectContains('/login');
     }
 
@@ -180,7 +179,7 @@ class UserControllerTest extends TestCase
     public function testLoginIsAccessibleWithoutAuthentication(): void
     {
         $this->get('/login');
-        
+
         $this->assertResponseOk();
         $this->assertNoRedirect();
     }
@@ -194,12 +193,12 @@ class UserControllerTest extends TestCase
     {
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => '',
             'password' => '',
         ]);
-        
+
         $this->assertResponseOk();
         // Flash messages don't persist in integration tests without session middleware
         // $this->assertFlashMessage('Invalid email or password', 'error');
@@ -214,12 +213,12 @@ class UserControllerTest extends TestCase
     {
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        
+
         $this->post('/login', [
             'email' => 'nonexistent@example.com',
             'password' => 'password',
         ]);
-        
+
         $this->assertResponseOk();
         // Flash messages don't persist in integration tests without session middleware
         // $this->assertFlashMessage('Invalid email or password', 'error');

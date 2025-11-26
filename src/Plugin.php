@@ -10,7 +10,7 @@ use Cake\Routing\RouteBuilder;
 
 /**
  * Plugin class
- * 
+ *
  * Provides authentication services for CakePHP applications.
  * It includes user management, authentication routes, and configuration settings.
  */
@@ -46,11 +46,11 @@ class Plugin extends BasePlugin
         // For example, 'Brammo/Auth.User' for the user authentication controller.
         // It is expected to have methods like login() and logout() to manage user sessions.
         $controller = Configure::read('Auth.Users.controller');
-        
+
         // Connect login route
         $loginRoute = Configure::read('Auth.Routes.login', '/login');
         $routes->connect($loginRoute, $controller . '::login');
-        
+
         // Connect logout route
         $logoutRoute = Configure::read('Auth.Routes.logout', '/logout');
         $routes->connect($logoutRoute, $controller . '::logout');
