@@ -23,5 +23,8 @@ class AppController extends Controller
 
         // Load the Authentication component
         $this->loadComponent('Authentication.Authentication');
+        
+        // Load Flash component for flash messages
+        $this->loadComponent('Flash');
     }
 }
