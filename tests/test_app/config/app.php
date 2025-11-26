@@ -34,6 +34,10 @@ return [
         'skipLog' => [],
         'log' => true,
         'trace' => true,
-        'ignoredDeprecationPaths' => [],
+        'ignoredDeprecationPaths' => [
+            // Since 3.3.0: loadIdentifier() usage is deprecated. Directly pass `'identifier'` config to the Authenticator.
+            // but still used in CakePHP AuthenticationService
+            'vendor/cakephp/authentication/src/AuthenticationService.php'
+        ],
     ],
 ];

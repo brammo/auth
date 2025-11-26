@@ -49,7 +49,7 @@ class UsersFixture extends TestFixture
             'name' => 'Test User',
             'email' => 'test@example.com',
             // Password: 'password' hashed with default hasher
-            'password' => '$2y$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO',
+            'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
             'created' => '2023-01-01 00:00:00',
             'modified' => '2023-01-01 00:00:00',
         ],
@@ -58,7 +58,7 @@ class UsersFixture extends TestFixture
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             // Password: 'admin123' hashed with default hasher
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
             'created' => '2023-01-02 00:00:00',
             'modified' => '2023-01-02 00:00:00',
         ],

@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
-use Cake\TestSuite\Fixture\SchemaLoader;
 
 // Load composer autoloader
 $root = dirname(__DIR__);
@@ -65,7 +64,7 @@ Security::setSalt('__REPLACE_WITH_LONG_RANDOM_STRING_FOR_TESTING__1234567890abcd
 // Configure cache
 use Cake\Cache\Cache;
 
-Cache::setConfig('_cake_core_', [
+Cache::setConfig('_cake_translations_', [
     'className' => 'File',
     'path' => CACHE,
 ]);
