@@ -57,17 +57,18 @@ class UsersTable extends Table
         $validator
             ->scalar('name')
             ->maxLength('name', 255)
-            ->notEmptyString('name');
+            ->notEmptyString('name')
+            ->requirePresence('name', 'create');
 
         $validator
             ->email('email')
             ->maxLength('email', 255)
-            ->notEmptyString('email');
+            ->notEmptyString('email')
+            ->requirePresence('email', 'create');
 
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
-            ->requirePresence('password', 'create')
             ->allowEmptyString('password');
 
         return $validator;
