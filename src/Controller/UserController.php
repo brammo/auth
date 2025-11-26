@@ -59,7 +59,9 @@ class UserController extends AppController
 
         // Render the login template defined in configuration
         $template = Configure::read('Auth.Templates.login');
-        $this->render($template);
+        if ($template) {
+            $this->viewBuilder()->setTemplate($template);
+        }
         
         return null;
     }
