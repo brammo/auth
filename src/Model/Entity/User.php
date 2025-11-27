@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -33,9 +34,24 @@ class User extends Entity
     /**
      * Fields that are excluded from JSON versions of the entity.
      *
-     * @var list<string>
+     * @var array<array-key,string>
      */
     protected array $_hidden = [
         'password',
     ];
+
+    /**
+     * Hashes the password before saving the user entity.
+     *
+     * @param string $password The plain text password.
+     * @return string|null The hashed password or null if the input is empty.
+     */
+    protected function _setPassword(string $password): ?string
+    {
+        if (!empty($password)) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+
+        return null;
+    }
 }

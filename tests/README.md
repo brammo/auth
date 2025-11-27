@@ -78,6 +78,11 @@ The test suite covers:
 - JSON serialization
 - Mass assignment protection
 - Property access
+- Password hashing on set
+- Empty password handling
+- Password hash uniqueness (salt verification)
+- Special character password support
+- Unicode character password support
 
 ### UsersTable (`UsersTableTest.php`)
 - Table initialization

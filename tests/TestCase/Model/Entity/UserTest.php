@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Test\TestCase\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Brammo\Auth\Model\Entity\User;
 use Cake\TestSuite\TestCase;
 
@@ -113,8 +114,11 @@ class UserTest extends TestCase
     {
         $this->assertEquals(1, $this->User->id);
         $this->assertEquals('test@example.com', $this->User->email);
-        $this->assertEquals('hashedpassword', $this->User->password);
         $this->assertEquals('Test User', $this->User->name);
+
+        // Password should be hashed, not plain text
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check('hashedpassword', $this->User->password));
     }
 
     /**
@@ -134,7 +138,10 @@ class UserTest extends TestCase
 
         $this->assertEquals('new@example.com', $user->email);
         $this->assertEquals('New User', $user->name);
-        $this->assertEquals('newpassword', $user->password);
+
+        // Password should be hashed, not plain text
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check('newpassword', $user->password));
     }
 
     /**
@@ -169,5 +176,94 @@ class UserTest extends TestCase
 
         $this->assertEquals('updated@example.com', $this->User->email);
         $this->assertEquals('Updated Name', $this->User->name);
+    }
+
+    /**
+     * Test password is hashed when set
+     *
+     * @return void
+     */
+    public function testPasswordIsHashed(): void
+    {
+        $plainPassword = 'mySecretPassword123';
+
+        $user = new User();
+        $user->password = $plainPassword;
+
+        // Password should not be stored as plain text
+        $this->assertNotEquals($plainPassword, $user->password);
+
+        // Password should be a valid hash that can be verified
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check($plainPassword, $user->password));
+    }
+
+    /**
+     * Test password hashing with empty string returns null
+     *
+     * @return void
+     */
+    public function testEmptyPasswordReturnsNull(): void
+    {
+        $user = new User();
+        $user->password = '';
+
+        $this->assertNull($user->password);
+    }
+
+    /**
+     * Test password hashing produces different hashes for same password
+     *
+     * @return void
+     */
+    public function testPasswordHashingProducesDifferentHashes(): void
+    {
+        $plainPassword = 'samePassword';
+
+        $user1 = new User();
+        $user1->password = $plainPassword;
+
+        $user2 = new User();
+        $user2->password = $plainPassword;
+
+        // Each hash should be unique (due to random salt)
+        $this->assertNotEquals($user1->password, $user2->password);
+
+        // But both should verify against the original password
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check($plainPassword, $user1->password));
+        $this->assertTrue($hasher->check($plainPassword, $user2->password));
+    }
+
+    /**
+     * Test password hashing with special characters
+     *
+     * @return void
+     */
+    public function testPasswordHashingWithSpecialCharacters(): void
+    {
+        $specialPassword = 'P@$$w0rd!#%^&*()_+-=[]{}|;:,.<>?';
+
+        $user = new User();
+        $user->password = $specialPassword;
+
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check($specialPassword, $user->password));
+    }
+
+    /**
+     * Test password hashing with unicode characters
+     *
+     * @return void
+     */
+    public function testPasswordHashingWithUnicodeCharacters(): void
+    {
+        $unicodePassword = 'пароль密码パスワード';
+
+        $user = new User();
+        $user->password = $unicodePassword;
+
+        $hasher = new DefaultPasswordHasher();
+        $this->assertTrue($hasher->check($unicodePassword, $user->password));
     }
 }
