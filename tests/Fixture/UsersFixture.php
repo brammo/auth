@@ -27,14 +27,11 @@ class UsersFixture extends TestFixture
         'name' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
         'email' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
         'password' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
+        'status' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => 'new'],
         'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
         'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
-        ],
-        '_options' => [
-            'engine' => 'InnoDB',
-            'collation' => 'utf8mb4_general_ci',
         ],
     ];
 
@@ -50,6 +47,7 @@ class UsersFixture extends TestFixture
             'email' => 'test@example.com',
             // Password: 'password' hashed with default hasher
             'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
+            'status' => 'active',
             'created' => '2023-01-01 00:00:00',
             'modified' => '2023-01-01 00:00:00',
         ],
@@ -57,10 +55,31 @@ class UsersFixture extends TestFixture
             'id' => 2,
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            // Password: 'admin123' hashed with default hasher
+            // Password: 'password' hashed with default hasher
             'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
+            'status' => 'active',
             'created' => '2023-01-02 00:00:00',
             'modified' => '2023-01-02 00:00:00',
+        ],
+        [
+            'id' => 3,
+            'name' => 'Blocked User',
+            'email' => 'blocked@example.com',
+            // Password: 'password' hashed with default hasher
+            'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
+            'status' => 'blocked',
+            'created' => '2023-01-03 00:00:00',
+            'modified' => '2023-01-03 00:00:00',
+        ],
+        [
+            'id' => 4,
+            'name' => 'New User',
+            'email' => 'new@example.com',
+            // Password: 'password' hashed with default hasher
+            'password' => '$2y$10$ZiAEOHsyqVUflvVRIHqxjOFzYMfygjU7B7apVsmhNE.i/2RJYkGri',
+            'status' => 'new',
+            'created' => '2023-01-04 00:00:00',
+            'modified' => '2023-01-04 00:00:00',
         ],
     ];
 }

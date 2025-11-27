@@ -5,6 +5,7 @@ namespace Brammo\Auth\Controller;
 
 use Authentication\Identifier\IdentifierCollection;
 use Authentication\Identifier\PasswordIdentifier;
+use Brammo\Auth\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
@@ -55,7 +56,7 @@ class UserController extends AppController
         }
 
         if ($this->request->is('post')) {
-            $this->Flash->error(__('Invalid email or password'));
+            $this->showLoginError();
         }
 
         // Render the login template defined in configuration
@@ -127,5 +128,43 @@ class UserController extends AppController
             $user->password = $this->request->getData('password');
             $Users->save($user);
         }
+    }
+
+    /**
+     * Show appropriate login error message based on user status
+     *
+     * Checks if the user exists and displays a specific message
+     * based on their account status (blocked, not activated, or invalid credentials).
+     *
+     * @return void
+     */
+    private function showLoginError(): void
+    {
+        $email = $this->request->getData('email');
+        $messages = Configure::read('Auth.Messages');
+
+        // Try to find user by email to check their status
+        if ($email) {
+            $Users = $this->fetchTable(Configure::read('Auth.Users.table'));
+            $user = $Users->find()
+                ->where(['email' => $email])
+                ->first();
+
+            if ($user instanceof User) {
+                if ($user->isBlocked()) {
+                    $this->Flash->error(__($messages['blocked'] ?? 'Your account has been blocked'));
+
+                    return;
+                }
+
+                if ($user->status === User::STATUS_NEW) {
+                    $this->Flash->error(__($messages['notActivated'] ?? 'Your account is not yet activated'));
+
+                    return;
+                }
+            }
+        }
+
+        $this->Flash->error(__($messages['invalidCredentials'] ?? 'Invalid email or password'));
     }
 }

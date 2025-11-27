@@ -5,10 +5,10 @@ declare(strict_types=1);
  * Test suite bootstrap for Brammo/Auth plugin
  */
 
-// Configure cache
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
+use Cake\Database\Schema\TableSchema;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Security;
 
@@ -68,11 +68,16 @@ Cache::setConfig('_cake_model_', [
 ]);
 
 // Setup SQLite test database
+$testDbPath = TMP . 'test.sqlite';
+if (file_exists($testDbPath)) {
+    unlink($testDbPath);
+}
+
 $config = [
-    'url' => 'sqlite:///:memory:',
+    'url' => 'sqlite:///' . $testDbPath,
     'timezone' => 'UTC',
     'quoteIdentifiers' => false,
-    'cacheMetadata' => true,
+    'cacheMetadata' => false,
 ];
 
 try {
@@ -84,19 +89,29 @@ try {
 ConnectionManager::setConfig('test', $config);
 ConnectionManager::alias('test', 'default');
 
-// Create users table for tests
+/**
+ * Create database schema from fixture field definitions.
+ *
+ * This ensures test schema stays in sync with fixtures and avoids
+ * duplicating schema definitions. The fields array format matches
+ * what CakePHP fixtures use.
+ */
 $connection = ConnectionManager::get('test');
-$sql = <<<SQL
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created DATETIME,
-    modified DATETIME
-)
-SQL;
-$connection->execute($sql);
+
+// Users table schema - matches UsersFixture::$fields
+$usersSchema = new TableSchema('users');
+$usersSchema->addColumn('id', ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'autoIncrement' => true]);
+$usersSchema->addColumn('name', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
+$usersSchema->addColumn('email', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
+$usersSchema->addColumn('password', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
+$usersSchema->addColumn('status', ['type' => 'string', 'length' => 20, 'null' => false, 'default' => 'new']);
+$usersSchema->addColumn('created', ['type' => 'datetime', 'null' => true, 'default' => null]);
+$usersSchema->addColumn('modified', ['type' => 'datetime', 'null' => true, 'default' => null]);
+$usersSchema->addConstraint('primary', ['type' => 'primary', 'columns' => ['id']]);
+
+foreach ($usersSchema->createSql($connection) as $sql) {
+    $connection->execute($sql);
+}
 
 // Load test configuration
 if (file_exists(CONFIG . 'app_local.php')) {

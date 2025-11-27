@@ -71,6 +71,10 @@ The test suite covers:
 - Logout process
 - Unauthenticated access
 - Empty data validation
+- Login with active user status
+- Login attempt with blocked user (shows blocked message)
+- Login attempt with new/inactive user (shows activation message)
+- Custom error messages from configuration
 
 ### User Entity (`UserTest.php`)
 - Field accessibility
@@ -83,6 +87,10 @@ The test suite covers:
 - Password hash uniqueness (salt verification)
 - Special character password support
 - Unicode character password support
+- Status field accessibility
+- `isActive()` method behavior
+- `isBlocked()` method behavior
+- Status constants (STATUS_ACTIVE, STATUS_NEW, STATUS_BLOCKED)
 
 ### UsersTable (`UsersTableTest.php`)
 - Table initialization
@@ -93,12 +101,27 @@ The test suite covers:
 - CRUD operations
 - Timestamp behavior
 - Field length validation
+- `findActive()` finder returns only active users
+- `findActive()` excludes blocked users
+- `findActive()` excludes new/inactive users
+- Status validation with valid values
+- Status validation with invalid values
+- Status default value
 
 ## Note on Fixture Setup
 
-The tests use an in-memory SQLite database for fast test execution. The `UsersFixture` provides test data with:
-- Test user (email: test@example.com, password: password)
-- Admin user (email: admin@example.com, password: admin123)
+The tests use a file-based SQLite database for reliable test execution. The database schema is created in `bootstrap.php` using CakePHP's `TableSchema` class with the same field definitions as the fixtures.
+
+**Why this approach?**
+- Single source of truth: Schema is defined once using CakePHP's schema format
+- Cross-database compatibility: Uses CakePHP's schema abstraction instead of raw SQL
+- Fixture alignment: Schema matches `UsersFixture::$fields` exactly
+
+The `UsersFixture` provides test data with:
+- Test user (email: test@example.com, password: password, status: active)
+- Admin user (email: admin@example.com, password: password, status: active)
+- Blocked user (email: blocked@example.com, password: password, status: blocked)
+- New user (email: new@example.com, password: password, status: new)
 
 ## Requirements
 

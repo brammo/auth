@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-27
+
+### Added
+- User status field with three values: 'active', 'new', 'blocked'
+- Default status is 'new' for newly created users
+- `findActive()` finder method on UsersTable to query only active users
+- Configurable authentication finder via `Auth.Authentication.finder` config
+- Configurable error messages for authentication failures:
+  - `Auth.Messages.invalidCredentials` - Invalid credentials message
+  - `Auth.Messages.blocked` - Message for blocked users
+  - `Auth.Messages.notActivated` - Message for inactive/new users
+- Status helper methods on User entity:
+  - `isActive()` - Check if user status is 'active'
+  - `isBlocked()` - Check if user status is 'blocked'
+- Status constants on User entity:
+  - `User::STATUS_ACTIVE` = 'active'
+  - `User::STATUS_NEW` = 'new'
+  - `User::STATUS_BLOCKED` = 'blocked'
+- Status validation in UsersTable (must be one of: active, new, blocked)
+- Migration `20251127000000_AddStatusToUsers` to add status column
+- Status field in UsersFixture with test users for each status
+- Comprehensive tests for all new status functionality
+
+### Changed
+- UserController now shows status-specific error messages on login failure
+- AuthenticationServiceProvider uses configurable finder (default: 'all')
+- Updated UsersSeed with status field
+
 ## [1.0.0] - 2025-11-17
 
 ### Added
@@ -105,5 +133,6 @@ bin/cake migrations migrate -p Brammo/Auth
 bin/cake migrations seed -p Brammo/Auth --seed UsersSeed
 ```
 
-[Unreleased]: https://github.com/brammo/auth/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/brammo/auth/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/brammo/auth/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/brammo/auth/releases/tag/v1.0.0

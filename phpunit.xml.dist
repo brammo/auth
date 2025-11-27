@@ -13,6 +13,11 @@
         </testsuite>
     </testsuites>
 
+    <!-- Load extension for fixtures -->
+    <extensions>
+        <bootstrap class="Cake\TestSuite\Fixture\Extension\PHPUnitExtension"/>
+    </extensions>
+
     <source>
         <include>
             <directory suffix=".php">src/</directory>

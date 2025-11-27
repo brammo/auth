@@ -9,101 +9,132 @@
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 
-// debug("Loading Brammo/Auth auth configuration.");
-
 $config = [
 
+    /**
+     * User settings
+     */
+    'Users' => [
+
         /**
-         * User settings
+         * Table used to manage users
+         * It is expected to have fields like 'email' and 'password'.
          */
-        'Users' => [
+        'table' => 'Brammo/Auth.Users',
 
-            /**
-             * Table used to manage users
-             * It is expected to have fields like 'email' and 'password'.
-             */
-            'table' => 'Brammo/Auth.Users',
+        /** 
+         * Controller used to manage user authentication
+         * It should have methods like login() and logout().
+         */
+        'controller' => 'Brammo/Auth.User',
+    ],
 
-            /** 
-             * Controller used to manage user authentication
-             * It should have methods like login() and logout().
-             */
-            'controller' => 'Brammo/Auth.User',
+    /**
+     * Routes settings
+     */
+    'Routes' => [
+
+        /** 
+         * Login route
+         * The URL where users are redirected to log in.
+         */
+        'login' => '/login',
+
+        /**
+         * Logout route
+         * The URL where users are redirected to log out.
+         */
+        'logout' => '/logout',
+
+        /**
+         * Default redirect after login
+         * The URL where users are redirected after successful login.
+         */
+        'loginRedirect' => '/',
+    ],
+
+    /**
+     * Authentication settings
+     * Configuration for authentication fields and password hashing.
+     */
+    'Authentication' => [
+
+        /**
+         * Finder used for authentication
+         *
+         * Specifies which finder to use when looking up users.
+         * Use 'active' to only allow active users to authenticate.
+         */
+        'finder' => 'active',
+
+        /**
+         * Fields used for authentication
+         * Specifies which fields represent username and password.
+         */
+        'fields' => [
+            'username' => 'email',
+            'password' => 'password'
         ],
 
         /**
-         * Routes settings
+         * Password hasher configuration
+         * 
+         * Specifies the class used for hashing passwords.
+         * 
+         * For multiple hashers (e.g., for legacy support), use:
+         * ```
+         * 'className' => 'Authentication.Fallback',
+         *   'hashers' => [
+         *       'Authentication.Default',
+         *       [
+         *           'className' => 'Authentication.Legacy',
+         *           'hashType' => 'sha1',
+         *       ],
+         *   ]
+         * ```
          */
-        'Routes' => [
-
-            /** 
-             * Login route
-             * The URL where users are redirected to log in.
-             */
-            'login' => '/login',
-
-            /**
-             * Logout route
-             * The URL where users are redirected to log out.
-             */
-            'logout' => '/logout',
-
-            /**
-             * Default redirect after login
-             * The URL where users are redirected after successful login.
-             */
-            'loginRedirect' => '/',
+        'passwordHasher' => [
+            'className' => 'Authentication.Default'
         ],
+    ],
+
+    /**
+     * Template settings
+     * Configuration for view templates used in authentication.
+     */
+    'Templates' => [
 
         /**
-         * Authentication settings
-         * Configuration for authentication fields and password hashing.
+         * Login template
+         * The view template used for rendering the login form.
          */
-        'Authentication' => [
+        'login' => 'Brammo/Auth.User/login',
+    ],
 
-            /**
-             * Fields used for authentication
-             * Specifies which fields represent username and password.
-             */
-            'fields' => [
-                'username' => 'email',
-                'password' => 'password'
-            ],
-
-            /**
-             * Password hasher configuration
-             * 
-             * Specifies the class used for hashing passwords.
-             * 
-             * For multiple hashers (e.g., for legacy support), use:
-             * ```
-             * 'className' => 'Authentication.Fallback',
-             *   'hashers' => [
-             *       'Authentication.Default',
-             *       [
-             *           'className' => 'Authentication.Legacy',
-             *           'hashType' => 'sha1',
-             *       ],
-             *   ]
-             * ```
-             */
-            'passwordHasher' => [
-                'className' => 'Authentication.Default'
-            ],
-        ],
+    /**
+     * Flash messages
+     * Configuration for flash messages displayed during authentication.
+     */
+    'Messages' => [
 
         /**
-         * Template settings
-         * Configuration for view templates used in authentication.
+         * Invalid credentials message
+         * Shown when email or password is incorrect.
          */
-        'Templates' => [
+        'invalidCredentials' => 'Invalid email or password',
 
-            /**
-             * Login template
-             * The view template used for rendering the login form.
-             */
-            'login' => 'Brammo/Auth.User/login',
-        ],
+        /**
+         * Account blocked message
+         * Shown when a blocked user attempts to log in.
+         */
+        'blocked' => 'Your account has been blocked',
+
+        /**
+         * Account not activated message
+         * Shown when a new/unactivated user attempts to log in.
+         */
+        'notActivated' => 'Your account is not yet activated',
+    ],
 ];
 
 // As the plugin loads last, we should merge with existing configuration

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Model\Table;
 
+use Brammo\Auth\Model\Entity\User;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -70,6 +72,11 @@ class UsersTable extends Table
             ->maxLength('password', 255)
             ->allowEmptyString('password');
 
+        $validator
+            ->scalar('status')
+            ->inList('status', [User::STATUS_ACTIVE, User::STATUS_NEW, User::STATUS_BLOCKED])
+            ->notEmptyString('status');
+
         return $validator;
     }
 
@@ -84,5 +91,18 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
+    }
+
+    /**
+     * Find active users
+     *
+     * Filters query to only return users with active status.
+     *
+     * @param \Cake\ORM\Query\SelectQuery $query The query to modify
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function findActive(SelectQuery $query): SelectQuery
+    {
+        return $query->where([$this->aliasField('status') => User::STATUS_ACTIVE]);
     }
 }

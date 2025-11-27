@@ -293,4 +293,130 @@ class UsersTableTest extends TestCase
         $errors = $user->getErrors();
         $this->assertArrayHasKey('password', $errors);
     }
+
+    /**
+     * Test findActive finder returns only active users
+     *
+     * @return void
+     */
+    public function testFindActive(): void
+    {
+        $activeUsers = $this->Users->find('active')->all();
+
+        foreach ($activeUsers as $user) {
+            $this->assertEquals('active', $user->status);
+        }
+
+        // Should have 2 active users from fixtures
+        $this->assertCount(2, $activeUsers);
+    }
+
+    /**
+     * Test findActive excludes blocked users
+     *
+     * @return void
+     */
+    public function testFindActiveExcludesBlockedUsers(): void
+    {
+        $activeUsers = $this->Users->find('active')->all()->toArray();
+        $emails = array_column($activeUsers, 'email');
+
+        $this->assertContains('test@example.com', $emails);
+        $this->assertContains('admin@example.com', $emails);
+        $this->assertNotContains('blocked@example.com', $emails);
+    }
+
+    /**
+     * Test findActive excludes new users
+     *
+     * @return void
+     */
+    public function testFindActiveExcludesNewUsers(): void
+    {
+        $activeUsers = $this->Users->find('active')->all()->toArray();
+        $emails = array_column($activeUsers, 'email');
+
+        $this->assertNotContains('new@example.com', $emails);
+    }
+
+    /**
+     * Test status validation with valid values
+     *
+     * @return void
+     */
+    public function testStatusValidationWithValidValues(): void
+    {
+        $validStatuses = ['active', 'new', 'blocked'];
+
+        foreach ($validStatuses as $status) {
+            $data = [
+                'name' => 'Test',
+                'email' => "status-{$status}@example.com",
+                'password' => 'password123',
+                'status' => $status,
+            ];
+
+            $user = $this->Users->newEntity($data);
+            $errors = $user->getErrors();
+
+            $this->assertArrayNotHasKey('status', $errors, "Status '{$status}' should be valid");
+        }
+    }
+
+    /**
+     * Test status validation with invalid value
+     *
+     * @return void
+     */
+    public function testStatusValidationWithInvalidValue(): void
+    {
+        $data = [
+            'name' => 'Test',
+            'email' => 'statustest@example.com',
+            'password' => 'password123',
+            'status' => 'invalid_status',
+        ];
+
+        $user = $this->Users->newEntity($data);
+        $errors = $user->getErrors();
+
+        $this->assertArrayHasKey('status', $errors);
+    }
+
+    /**
+     * Test status defaults to 'new' when not provided
+     *
+     * Note: The default value is set in the database migration.
+     * In test fixtures, we verify the schema definition includes the default.
+     *
+     * @return void
+     */
+    public function testStatusDefaultValue(): void
+    {
+        // Verify the schema has the correct default
+        $schema = $this->Users->getSchema();
+        $column = $schema->getColumn('status');
+
+        $this->assertEquals('new', $column['default']);
+    }
+
+    /**
+     * Test status is not empty validation
+     *
+     * @return void
+     */
+    public function testStatusNotEmpty(): void
+    {
+        $data = [
+            'name' => 'Test',
+            'email' => 'emptystatustest@example.com',
+            'password' => 'password123',
+            'status' => '',
+        ];
+
+        $user = $this->Users->newEntity($data);
+        $errors = $user->getErrors();
+
+        $this->assertArrayHasKey('status', $errors);
+    }
 }

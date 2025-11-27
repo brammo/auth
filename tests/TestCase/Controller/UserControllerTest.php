@@ -48,6 +48,12 @@ class UserControllerTest extends TestCase
         Configure::write('Auth.Authentication.passwordHasher', [
             'className' => 'Authentication.Default',
         ]);
+        Configure::write('Auth.Authentication.finder', 'active');
+        Configure::write('Auth.Messages', [
+            'invalidCredentials' => 'Invalid email or password',
+            'blocked' => 'Your account has been blocked',
+            'notActivated' => 'Your account is not yet activated',
+        ]);
     }
 
     /**
@@ -222,5 +228,84 @@ class UserControllerTest extends TestCase
         $this->assertResponseOk();
         // Flash messages don't persist in integration tests without session middleware
         // $this->assertFlashMessage('Invalid email or password', 'error');
+    }
+
+    /**
+     * Test login with blocked user shows blocked message
+     *
+     * @return void
+     */
+    public function testLoginWithBlockedUser(): void
+    {
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'blocked@example.com',
+            'password' => 'password',
+        ]);
+
+        // Should not authenticate - stays on login page
+        $this->assertResponseOk();
+        $this->assertNoRedirect();
+    }
+
+    /**
+     * Test login with new (not activated) user shows not activated message
+     *
+     * @return void
+     */
+    public function testLoginWithNewUser(): void
+    {
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'new@example.com',
+            'password' => 'password',
+        ]);
+
+        // Should not authenticate - stays on login page
+        $this->assertResponseOk();
+        $this->assertNoRedirect();
+    }
+
+    /**
+     * Test login with active user succeeds
+     *
+     * @return void
+     */
+    public function testLoginWithActiveUser(): void
+    {
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ]);
+
+        // Should authenticate successfully and redirect
+        $this->assertRedirect('/');
+    }
+
+    /**
+     * Test blocked user with wrong password shows invalid credentials
+     *
+     * @return void
+     */
+    public function testBlockedUserWithWrongPassword(): void
+    {
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'blocked@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        // Should show blocked message (user exists but is blocked)
+        $this->assertResponseOk();
+        $this->assertNoRedirect();
     }
 }

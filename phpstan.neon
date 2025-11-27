@@ -13,8 +13,7 @@ parameters:
         - '#Method .+::bootstrap\(\) has parameter \$app with generic interface#'
         # CakePHP Table generic type annotation for Psalm compatibility
         - '#Type .+ in generic type .+ in PHPDoc tag @extends is not subtype of template type#'
-        # Authentication service deprecated methods still used in CakePHP 3.3.0+
-        - '#Call to an undefined method Authentication\\AuthenticationServiceInterface::identifiers\(\)#'
-        - '#Cannot call method getIdentifier\(\) on Authentication\\IdentityInterface\|null#'
+        # CakePHP finder methods don't specify generic SelectQuery types
+        - '#with generic class Cake\\ORM\\Query\\SelectQuery (but )?does not specify its types#'
     treatPhpDocTypesAsCertain: false
 

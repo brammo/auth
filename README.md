@@ -10,6 +10,7 @@ login/logout functionality, and configurable authentication services.
 ## Features
 
 - **Complete Authentication System** - Login/logout functionality out of the box
+- **User Status Management** - Built-in support for user status (active, new, blocked) with configurable finders
 - **Highly Configurable** - Customize routes, templates, password hashers, and more
 - **Secure** - Uses CakePHP's authentication library with bcrypt password hashing
 - **Flexible** - Easy to integrate into existing applications
@@ -110,6 +111,7 @@ The migration creates a users table with the following structure:
 - `name` - User's display name (optional)
 - `email` - Unique email address (required)
 - `password` - Hashed password (required)
+- `status` - User status: 'active', 'new', or 'blocked' (default: 'new')
 - `created` - Timestamp of creation
 - `modified` - Timestamp of last modification
 
@@ -125,6 +127,7 @@ CREATE TABLE users (
     name VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'new',
     created DATETIME,
     modified DATETIME
 );
@@ -252,6 +255,59 @@ Redirect users to different locations after login:
 
 The plugin includes cookie-based authentication by default. Configure it in your Authentication service if needed.
 
+### User Status
+
+The plugin supports user status management with three built-in statuses:
+- `active` - User can log in
+- `new` - Newly registered user (default), cannot log in until activated
+- `blocked` - Blocked user, cannot log in
+
+Configure the authentication finder to only allow active users:
+
+```php
+// In config/auth.php
+'Authentication' => [
+    'finder' => 'active',  // Only allow active users to log in
+],
+```
+
+Configure custom error messages for blocked and inactive users:
+
+```php
+// In config/auth.php
+'Messages' => [
+    'invalidCredentials' => 'Invalid email or password',
+    'blocked' => 'Your account has been blocked. Please contact support.',
+    'notActivated' => 'Your account is not yet activated. Please check your email.',
+],
+```
+
+Use status constants in your code:
+
+```php
+use Brammo\Auth\Model\Entity\User;
+
+// Check user status
+if ($user->isActive()) {
+    // User is active
+}
+
+if ($user->isBlocked()) {
+    // User is blocked
+}
+
+// Set user status
+$user->status = User::STATUS_ACTIVE;
+$user->status = User::STATUS_NEW;
+$user->status = User::STATUS_BLOCKED;
+```
+
+Query only active users:
+
+```php
+$activeUsers = $this->Users->find('active')->all();
+```
+
 ## Testing
 
 Run the test suite:
@@ -323,7 +379,9 @@ Handles authentication actions:
 
 Represents a user with:
 - Hidden password field in JSON output
-- Mass-assignable fields (email, password, name)
+- Mass-assignable fields (email, password, name, status)
+- Status constants: `STATUS_ACTIVE`, `STATUS_NEW`, `STATUS_BLOCKED`
+- Helper methods: `isActive()`, `isBlocked()`
 
 ### UsersTable
 
@@ -332,6 +390,8 @@ Manages user data with:
 - Unique email constraint
 - Timestamp behavior
 - Validation rules
+- `findActive()` finder for querying active users only
+- Status validation (active, new, blocked)
 
 ## Troubleshooting
 
@@ -387,6 +447,15 @@ For issues, questions, or contributions, please visit:
 - [Documentation](https://github.com/brammo/auth)
 
 ## Changelog
+
+### Version 1.1.0
+- Added user status field with values: 'active', 'new', 'blocked'
+- Added `findActive()` finder to query only active users
+- Added configurable authentication finder
+- Added configurable error messages for blocked/inactive users
+- Added status helper methods on User entity (`isActive()`, `isBlocked()`)
+- Added status validation
+- Added migration for status field
 
 ### Version 1.0.0
 - Initial release

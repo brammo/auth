@@ -27,6 +27,7 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
         $loginUrl = Configure::read('Auth.Routes.login');
         $userModel = Configure::read('Auth.Users.table');
         $passwordHasher = Configure::read('Auth.Authentication.passwordHasher');
+        $finder = Configure::read('Auth.Authentication.finder', 'all');
 
         // Define identifier configuration
         $identifier = [
@@ -34,6 +35,7 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
                 'resolver' => [
                     'className' => 'Authentication.Orm',
                     'userModel' => $userModel,
+                    'finder' => $finder,
                 ],
                 'fields' => $fields,
                 'passwordHasher' => $passwordHasher,

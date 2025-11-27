@@ -28,6 +28,7 @@ class UsersSeed extends BaseSeed
                 'email' => 'admin@example.com',
                 // Password: 'admin123' - hashed with bcrypt
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+                'status' => 'active',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],
@@ -36,6 +37,7 @@ class UsersSeed extends BaseSeed
                 'email' => 'user@example.com',
                 // Password: 'password' - hashed with bcrypt
                 'password' => '$2y$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO',
+                'status' => 'active',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],

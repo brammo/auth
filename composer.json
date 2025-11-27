@@ -16,7 +16,7 @@
         }
     ],
     "license": "MIT",
-    "version": "1.0",
+    "version": "1.1.0",
     "prefer-stable": true,
     "require": {
         "php": ">=8.1",
@@ -51,11 +51,11 @@
             "@stan",
             "@psalm"
          ],
-        "cs-check": "phpcs -n -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
-        "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
-        "test": "phpunit --stderr",
-        "stan": "phpstan analyse --memory-limit=512M",
-        "stan-baseline": "phpstan analyse --memory-limit=512M --generate-baseline",
+        "cs-check": "phpcs --colors -p",
+        "cs-fix": "phpcbf --colors -p",
+        "test": "phpunit --colors=always",
+        "stan": "phpstan analyse",
+        "stan-baseline": "phpstan analyse --generate-baseline",
         "psalm": "psalm --show-info=false",
         "psalm-baseline": "psalm --set-baseline=psalm-baseline.xml",
         "coverage-test": "phpunit --stderr --coverage-clover=clover.xml"

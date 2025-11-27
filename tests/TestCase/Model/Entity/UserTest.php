@@ -266,4 +266,95 @@ class UserTest extends TestCase
         $hasher = new DefaultPasswordHasher();
         $this->assertTrue($hasher->check($unicodePassword, $user->password));
     }
+
+    /**
+     * Test status constants
+     *
+     * @return void
+     */
+    public function testStatusConstants(): void
+    {
+        $this->assertEquals('active', User::STATUS_ACTIVE);
+        $this->assertEquals('new', User::STATUS_NEW);
+        $this->assertEquals('blocked', User::STATUS_BLOCKED);
+    }
+
+    /**
+     * Test status field is accessible
+     *
+     * @return void
+     */
+    public function testStatusIsAccessible(): void
+    {
+        $user = new User();
+        $this->assertTrue($user->isAccessible('status'));
+    }
+
+    /**
+     * Test isActive method returns true for active status
+     *
+     * @return void
+     */
+    public function testIsActiveWithActiveStatus(): void
+    {
+        $user = new User(['status' => User::STATUS_ACTIVE]);
+        $this->assertTrue($user->isActive());
+    }
+
+    /**
+     * Test isActive method returns false for non-active status
+     *
+     * @return void
+     */
+    public function testIsActiveWithNonActiveStatus(): void
+    {
+        $user = new User(['status' => User::STATUS_BLOCKED]);
+        $this->assertFalse($user->isActive());
+
+        $user->status = User::STATUS_NEW;
+        $this->assertFalse($user->isActive());
+    }
+
+    /**
+     * Test isBlocked method returns true for blocked status
+     *
+     * @return void
+     */
+    public function testIsBlockedWithBlockedStatus(): void
+    {
+        $user = new User(['status' => User::STATUS_BLOCKED]);
+        $this->assertTrue($user->isBlocked());
+    }
+
+    /**
+     * Test isBlocked method returns false for non-blocked status
+     *
+     * @return void
+     */
+    public function testIsBlockedWithNonBlockedStatus(): void
+    {
+        $user = new User(['status' => User::STATUS_ACTIVE]);
+        $this->assertFalse($user->isBlocked());
+
+        $user->status = User::STATUS_NEW;
+        $this->assertFalse($user->isBlocked());
+    }
+
+    /**
+     * Test status can be set via mass assignment
+     *
+     * @return void
+     */
+    public function testStatusMassAssignment(): void
+    {
+        $data = [
+            'email' => 'test@example.com',
+            'name' => 'Test User',
+            'status' => User::STATUS_ACTIVE,
+        ];
+
+        $user = new User($data);
+
+        $this->assertEquals(User::STATUS_ACTIVE, $user->status);
+    }
 }

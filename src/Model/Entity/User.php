@@ -12,12 +12,28 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string|null $email
  * @property string|null $password
+ * @property string $status
  * @property string|null $name
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
  */
 class User extends Entity
 {
+    /**
+     * Status constant for active users
+     */
+    public const STATUS_ACTIVE = 'active';
+
+    /**
+     * Status constant for new users (not yet activated)
+     */
+    public const STATUS_NEW = 'new';
+
+    /**
+     * Status constant for blocked users
+     */
+    public const STATUS_BLOCKED = 'blocked';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -26,6 +42,7 @@ class User extends Entity
     protected array $_accessible = [
         'email' => true,
         'password' => true,
+        'status' => true,
         'name' => true,
         'created' => true,
         'modified' => true,
@@ -53,5 +70,25 @@ class User extends Entity
         }
 
         return null;
+    }
+
+    /**
+     * Check if user status is active
+     *
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * Check if user status is blocked
+     *
+     * @return bool
+     */
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
     }
 }
