@@ -308,4 +308,45 @@ class UserControllerTest extends TestCase
         $this->assertResponseOk();
         $this->assertNoRedirect();
     }
+
+    /**
+     * Test that password is rehashed after successful login if needed
+     *
+     * @return void
+     */
+    public function testPasswordRehashAfterLogin(): void
+    {
+        // Create a password hash with a lower cost factor that will need rehashing
+        $lowCostHash = password_hash('password', PASSWORD_BCRYPT, ['cost' => 4]);
+
+        // Update the test user's password with the low-cost hash directly in database
+        // to bypass the entity's password hashing mutator
+        $Users = $this->getTableLocator()->get('Brammo/Auth.Users');
+        $connection = $Users->getConnection();
+        $connection->update('users', ['password' => $lowCostHash], ['id' => 1]);
+
+        // Verify the low-cost hash is saved
+        $originalHash = $Users->get(1)->password;
+        $this->assertSame($lowCostHash, $originalHash);
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ]);
+
+        $this->assertRedirect('/');
+
+        // After successful login, the password should have been rehashed
+        $updatedUser = $Users->get(1);
+        $newHash = $updatedUser->password;
+
+        // The hash should be different (rehashed with default cost)
+        $this->assertNotSame($originalHash, $newHash);
+
+        // The new hash should still validate the same password
+        $this->assertTrue(password_verify('password', $newHash));
+    }
 }
