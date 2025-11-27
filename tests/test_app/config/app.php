@@ -30,7 +30,7 @@ return [
 
     'Error' => [
         'errorLevel' => E_ALL,
-        'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
+        'exceptionRenderer' => 'Cake\Error\Renderer\WebExceptionRenderer',
         'skipLog' => [],
         'log' => true,
         'trace' => true,

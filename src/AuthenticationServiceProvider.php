@@ -28,6 +28,18 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
         $userModel = Configure::read('Auth.Users.table');
         $passwordHasher = Configure::read('Auth.Authentication.passwordHasher');
 
+        // Define identifier configuration
+        $identifier = [
+            'Authentication.Password' => [
+                'resolver' => [
+                    'className' => 'Authentication.Orm',
+                    'userModel' => $userModel,
+                ],
+                'fields' => $fields,
+                'passwordHasher' => $passwordHasher,
+            ],
+        ];
+
         // Create the authentication service
         $service = new AuthenticationService([
             'authenticators' => [
@@ -35,20 +47,12 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
                 'Authentication.Form' => [
                     'fields' => $fields,
                     'loginUrl' => $loginUrl,
+                    'identifier' => $identifier,
                 ],
                 'Authentication.Cookie' => [
                     'fields' => $fields,
                     'loginUrl' => $loginUrl,
-                ],
-            ],
-            'identifiers' => [
-                'Authentication.Password' => [
-                    'resolver' => [
-                        'className' => 'Authentication.Orm',
-                        'userModel' => $userModel,
-                    ],
-                    'fields' => $fields,
-                    'passwordHasher' => $passwordHasher,
+                    'identifier' => $identifier,
                 ],
             ],
             'unauthenticatedRedirect' => $loginUrl,

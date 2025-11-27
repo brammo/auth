@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Controller;
 
+use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\PasswordIdentifier;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
@@ -90,10 +92,32 @@ class UserController extends AppController
         // Get the authentication service
         $authentication = $this->Authentication->getAuthenticationService();
 
+        // Get the identifier from the successful authentication provider
+        $provider = $authentication->getAuthenticationProvider();
+        if ($provider === null) {
+            return;
+        }
+
+        $identifiers = $provider->getIdentifier();
+
+        // Get the Password identifier from the collection
+        if (!$identifiers instanceof IdentifierCollection || !$identifiers->has('Password')) {
+            return;
+        }
+
+        $passwordIdentifier = $identifiers->get('Password');
+        if (!$passwordIdentifier instanceof PasswordIdentifier) {
+            return;
+        }
+
         // Check if the password needs rehashing
-        if ($authentication->identifiers()->get('Password')->needsPasswordRehash()) {
+        if ($passwordIdentifier->needsPasswordRehash()) {
             // Get the currently logged-in user's ID
-            $userId = $authentication->getIdentity()->getIdentifier();
+            $identity = $authentication->getIdentity();
+            if ($identity === null) {
+                return;
+            }
+            $userId = $identity->getIdentifier();
 
             // Get user table from configuration
             $Users = $this->fetchTable(Configure::read('Auth.Users.table'));
