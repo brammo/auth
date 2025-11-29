@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `Auth.Authentication.rehashPasswords` config option to control password rehashing on login
+- Password rehashing is now disabled by default for better performance
+- Tests for password rehashing behavior with config option
+
 ## [1.1.0] - 2025-11-27
 
 ### Added

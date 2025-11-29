@@ -90,6 +90,11 @@ class UserController extends AppController
      */
     private function rehashUserPassword(): void
     {
+        // Check if password rehashing is enabled
+        if (!Configure::read('Auth.Authentication.rehashPasswords', false)) {
+            return;
+        }
+
         // Get the authentication service
         $authentication = $this->Authentication->getAuthenticationService();
 

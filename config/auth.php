@@ -96,6 +96,16 @@ $config = [
         'passwordHasher' => [
             'className' => 'Authentication.Default'
         ],
+
+        /**
+         * Rehash passwords
+         *
+         * When enabled, passwords will be automatically rehashed
+         * on login if the hashing algorithm or cost has changed.
+         * This is useful when migrating from legacy hashers or
+         * when updating bcrypt cost parameters.
+         */
+        'rehashPasswords' => false,
     ],
 
     /**
