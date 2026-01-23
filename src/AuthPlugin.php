@@ -14,7 +14,7 @@ use Cake\Routing\RouteBuilder;
  * Provides authentication services for CakePHP applications.
  * It includes user management, authentication routes, and configuration settings.
  */
-class Plugin extends BasePlugin
+class AuthPlugin extends BasePlugin
 {
     /**
      * Plugin bootstrap method

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Test\TestCase;
 
-use Brammo\Auth\Plugin;
+use Brammo\Auth\AuthPlugin;
 use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
@@ -11,16 +11,16 @@ use Cake\TestSuite\TestCase;
 use TestApp\Application;
 
 /**
- * Brammo\Auth\Plugin Test Case
+ * Brammo\Auth\AuthPlugin Test Case
  */
 class PluginTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \Brammo\Auth\Plugin
+     * @var \Brammo\Auth\AuthPlugin
      */
-    protected Plugin $Plugin;
+    protected AuthPlugin $Plugin;
 
     /**
      * Test application
@@ -39,7 +39,7 @@ class PluginTest extends TestCase
         parent::setUp();
 
         $this->app = new Application(CONFIG);
-        $this->Plugin = new Plugin();
+        $this->Plugin = new AuthPlugin();
     }
 
     /**
