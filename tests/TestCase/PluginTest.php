@@ -75,6 +75,8 @@ class PluginTest extends TestCase
         $this->assertEquals('/login', Configure::read('Auth.Routes.login'));
         $this->assertEquals('/logout', Configure::read('Auth.Routes.logout'));
         $this->assertEquals('/', Configure::read('Auth.Routes.loginRedirect'));
+        $this->assertEquals('Auth', Configure::read('Auth.Authentication.sessionKey'));
+        $this->assertEquals('CookieAuth', Configure::read('Auth.Authentication.cookieName'));
     }
 
     /**

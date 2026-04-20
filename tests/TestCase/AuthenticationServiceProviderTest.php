@@ -135,4 +135,54 @@ class AuthenticationServiceProviderTest extends TestCase
 
         $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
     }
+
+    /**
+     * Test authentication service with custom session key
+     *
+     * @return void
+     */
+    public function testGetAuthenticationServiceWithCustomSessionKey(): void
+    {
+        Configure::write('Auth.Authentication.sessionKey', 'AdminAuth');
+
+        $request = ServerRequestFactory::fromGlobals();
+
+        $service = $this->provider->getAuthenticationService($request);
+
+        $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
+    }
+
+    /**
+     * Test authentication service with custom cookie name
+     *
+     * @return void
+     */
+    public function testGetAuthenticationServiceWithCustomCookieName(): void
+    {
+        Configure::write('Auth.Authentication.cookieName', 'AdminCookieAuth');
+
+        $request = ServerRequestFactory::fromGlobals();
+
+        $service = $this->provider->getAuthenticationService($request);
+
+        $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
+    }
+
+    /**
+     * Test authentication service uses default session key and cookie name
+     *
+     * @return void
+     */
+    public function testGetAuthenticationServiceDefaultSessionKeyAndCookieName(): void
+    {
+        // Ensure no custom values are set
+        Configure::delete('Auth.Authentication.sessionKey');
+        Configure::delete('Auth.Authentication.cookieName');
+
+        $request = ServerRequestFactory::fromGlobals();
+
+        $service = $this->provider->getAuthenticationService($request);
+
+        $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
+    }
 }

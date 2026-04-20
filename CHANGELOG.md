@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-20
+
 ### Added
+- `Auth.Authentication.sessionKey` config option to customize the session key (default: `Auth`)
+- `Auth.Authentication.cookieName` config option to customize the remember-me cookie name (default: `CookieAuth`)
+- Allows using the plugin in multiple contexts (e.g., frontend and admin) without session/cookie conflicts
 - `Auth.Authentication.rehashPasswords` config option to control password rehashing on login
 - Password rehashing is now disabled by default for better performance
 - Tests for password rehashing behavior with config option
+
+### Fixed
+- PHPStan and Psalm errors
 
 ## [1.1.0] - 2025-11-27
 

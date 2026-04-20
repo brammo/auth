@@ -106,6 +106,28 @@ $config = [
          * when updating bcrypt cost parameters.
          */
         'rehashPasswords' => false,
+
+        /**
+         * Session key
+         *
+         * The key used to store user identity in the session.
+         * Change this when using the plugin in multiple contexts
+         * (e.g., frontend and admin) to avoid session conflicts.
+         *
+         * Default: 'Auth'
+         */
+        'sessionKey' => 'Auth',
+
+        /**
+         * Cookie name
+         *
+         * The name of the "remember me" cookie.
+         * Change this when using the plugin in multiple contexts
+         * (e.g., frontend and admin) to avoid cookie conflicts.
+         *
+         * Default: 'CookieAuth'
+         */
+        'cookieName' => 'CookieAuth',
     ],
 
     /**

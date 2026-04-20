@@ -68,6 +68,8 @@ return [
             'passwordHasher' => [
                 'className' => 'Authentication.Default',
             ],
+            'sessionKey' => 'Auth',       // Change when using multiple instances
+            'cookieName' => 'CookieAuth', // Change when using multiple instances
         ],
         'Templates' => [
             'login' => 'Users/login',  // Your login template
@@ -254,6 +256,36 @@ Redirect users to different locations after login:
 ### Cookie-Based Authentication
 
 The plugin includes cookie-based authentication by default. Configure it in your Authentication service if needed.
+
+### Multiple Instances (Frontend & Admin)
+
+When using the plugin in multiple parts of the same application (e.g., a frontend and an admin panel),
+you need separate session keys and cookie names to avoid conflicts between authenticated users.
+
+Configure `sessionKey` and `cookieName` per context in your application's `config/auth.php`:
+
+```php
+// Admin plugin configuration (e.g., in plugins/Admin/config/bootstrap.php)
+Configure::write('Auth', [
+    'Authentication' => [
+        'sessionKey' => 'AdminAuth',
+        'cookieName' => 'AdminCookieAuth',
+    ],
+    'Routes' => [
+        'login' => '/admin/login',
+        'logout' => '/admin/logout',
+        'loginRedirect' => '/admin',
+    ],
+]);
+```
+
+Each instance of `AuthenticationServiceProvider` will use its own session and cookie, so users
+can be logged into the frontend and admin areas independently.
+
+| Option | Default | Description |
+|---|---|---|
+| `Auth.Authentication.sessionKey` | `Auth` | Session key for storing user identity |
+| `Auth.Authentication.cookieName` | `CookieAuth` | Name of the "remember me" cookie |
 
 ### User Status
 
@@ -447,6 +479,13 @@ For issues, questions, or contributions, please visit:
 - [Documentation](https://github.com/brammo/auth)
 
 ## Changelog
+
+### Version 1.2.0
+- Added `Auth.Authentication.sessionKey` config option for custom session keys
+- Added `Auth.Authentication.cookieName` config option for custom cookie names
+- Support for using the plugin in multiple contexts (e.g., frontend and admin)
+- Added `Auth.Authentication.rehashPasswords` config option to control password rehashing
+- Fixed PHPStan and Psalm errors
 
 ### Version 1.1.0
 - Added user status field with values: 'active', 'new', 'blocked'
