@@ -7,12 +7,8 @@ parameters:
     excludePaths:
         - tests/Fixture/*
     ignoreErrors:
-        # EntityInterface doesn't define specific properties, but entities do
-        - '#Access to an undefined property Cake\\Datasource\\EntityInterface::\$[a-zA-Z0-9_]+#'
         # Ignore generic interface warnings for CakePHP plugin applications
         - '#Method .+::bootstrap\(\) has parameter \$app with generic interface#'
-        # CakePHP Table generic type annotation for Psalm compatibility
-        - '#Type .+ in generic type .+ in PHPDoc tag @extends is not subtype of template type#'
         # CakePHP finder methods don't specify generic SelectQuery types
         - '#with generic class Cake\\ORM\\Query\\SelectQuery (but )?does not specify its types#'
     treatPhpDocTypesAsCertain: false

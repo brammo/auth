@@ -15,4 +15,16 @@
     <stubs>
         <file name="vendor/cakephp/cakephp/src/functions.php" />
     </stubs>
+    <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <MoreSpecificImplementedParamType>
+            <errorLevel type="suppress">
+                <directory name="src" />
+            </errorLevel>
+        </MoreSpecificImplementedParamType>
+    </issueHandlers>
 </psalm>
