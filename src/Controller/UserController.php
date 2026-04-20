@@ -37,7 +37,7 @@ class UserController extends AppController
      */
     public function login(): ?Response
     {
-        $this->request->allowMethod(['get', 'post']);
+        $this->getRequest()->allowMethod(['get', 'post']);
 
         $result = $this->Authentication->getResult();
 
@@ -46,7 +46,7 @@ class UserController extends AppController
             $this->rehashUserPassword();
 
             // Redirect to the originally intended URL or default location defined in configuration
-            $redirectUrl = $this->request->getQuery(
+            $redirectUrl = $this->getRequest()->getQuery(
                 'redirect',
                 $this->Authentication->getLoginRedirect() ??
                 Configure::read('Auth.Routes.loginRedirect', '/'),
@@ -55,7 +55,7 @@ class UserController extends AppController
             return $this->redirect($redirectUrl);
         }
 
-        if ($this->request->is('post')) {
+        if ($this->getRequest()->is('post')) {
             $this->showLoginError();
         }
 
@@ -130,7 +130,7 @@ class UserController extends AppController
 
             // Update the user's password
             $user = $Users->get($userId);
-            $user->password = $this->request->getData('password');
+            $user->set('password', $this->getRequest()->getData('password'));
             $Users->save($user);
         }
     }
@@ -145,7 +145,7 @@ class UserController extends AppController
      */
     private function showLoginError(): void
     {
-        $email = $this->request->getData('email');
+        $email = $this->getRequest()->getData('email');
         $messages = Configure::read('Auth.Messages');
 
         // Try to find user by email to check their status
