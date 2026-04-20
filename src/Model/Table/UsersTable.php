@@ -12,20 +12,12 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @method \Auth\Model\Entity\User newEmptyEntity()
- * @method \Auth\Model\Entity\User newEntity(array $data, array $options = [])
- * @method array<\Auth\Model\Entity\User> newEntities(array $data, array $options = [])
- * @method \Auth\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Auth\Model\Entity\User findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method \Auth\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method array<\Auth\Model\Entity\User> patchEntities(iterable $entities, array $data, array $options = [])
- * @method \Auth\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method \Auth\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\Auth\Model\Entity\User>|\Cake\Datasource\ResultSetInterface<\Auth\Model\Entity\User> deleteManyOrFail(iterable $entities, array $options = [])
- * @extends \Cake\ORM\Table<\Brammo\Auth\Model\Entity\User>
+ * @method \Brammo\Auth\Model\Entity\User newEntity(array $data, array $options = [])
+ * @method array<\Brammo\Auth\Model\Entity\User> newEntities(array $data, array $options = [])
+ * @method \Brammo\Auth\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \Brammo\Auth\Model\Entity\User findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method array<\Brammo\Auth\Model\Entity\User> patchEntities(iterable $entities, array $data, array $options = [])
+ * @extends \Cake\ORM\Table<array<string, \Cake\ORM\Behavior>, \Brammo\Auth\Model\Entity\User>
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class UsersTable extends Table
