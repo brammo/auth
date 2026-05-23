@@ -1,0 +1,11 @@
+msgid "Email"
+msgstr "Имейл"
+
+msgid "Password"
+msgstr "Парола"
+
+msgid "Remember me"
+msgstr "Запомни ме"
+
+msgid "Log in"
+msgstr "Вход"

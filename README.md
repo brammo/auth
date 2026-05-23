@@ -391,6 +391,10 @@ Run all checks:
 composer check
 ```
 
+## Translations
+
+Plugin template strings use the `brammo_auth` domain. See [docs/I18N.md](docs/I18N.md) for extraction and locale file layout.
+
 ## API Documentation
 
 ### Plugin Class

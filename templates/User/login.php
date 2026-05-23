@@ -13,7 +13,6 @@ $this->setLayout('Brammo/Auth.login');
         <?= $this->Flash->render() ?>
         <div class="card">
             <div class="card-body p-4 p-lg-5">
-                <?= $this->Flash->render() ?>
                 <?= $this->Form->create(null, [
                     'class' => 'login-form',
                     'url' => ['controller' => 'User', 'action' => 'login']
@@ -22,7 +21,7 @@ $this->setLayout('Brammo/Auth.login');
                     <?= $this->Form->control('email', [
                         'type' => 'email',
                         'label' => false,
-                        'placeholder' => __('Email'),
+                        'placeholder' => __d('brammo_auth', 'Email'),
                         'class' => 'form-control',
                         'required' => true,
                         'autocomplete' => 'email',
@@ -33,7 +32,7 @@ $this->setLayout('Brammo/Auth.login');
                     <?= $this->Form->control('password', [
                         'type' => 'password',
                         'label' => false,
-                        'placeholder' => __('Password'),
+                        'placeholder' => __d('brammo_auth', 'Password'),
                         'class' => 'form-control',
                         'required' => true,
                         'autocomplete' => 'current-password'
@@ -42,13 +41,13 @@ $this->setLayout('Brammo/Auth.login');
                 <div class="mb-3">
                     <?= $this->Form->control('remember_me', [
                         'type' => 'checkbox',
-                        'label' => __('Remember me'),
+                        'label' => __d('brammo_auth', 'Remember me'),
                         'class' => 'form-check-input',
                         'id' => 'remember_me'
                     ]) ?>
                 </div>
                 <div class="d-grid">
-                    <?= $this->Form->button(__('Log in'), [
+                    <?= $this->Form->button(__d('brammo_auth', 'Log in'), [
                             'type' => 'submit', 
                             'class' => 'btn btn-primary'
                         ]) 
