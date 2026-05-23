@@ -1,0 +1,15 @@
+---
+description: Brammo/Auth CakePHP plugin conventions and quality gates
+alwaysApply: true
+---
+
+# Brammo/Auth
+
+CakePHP 5 **plugin** (`Brammo\Auth\`): authentication via `AuthenticationServiceProvider`, `UserController` (login/logout), `Users` model with status finder `active`.
+
+- Config: `config/auth.php` → `Auth.*`; merged with host overrides.
+- Templates: `__d('brammo_auth', ...)` in plugin views; flash strings via `Auth.Messages` + `__()`.
+- Before finishing: `composer check` and `composer analyse` (66 tests, PHPStan, Psalm, PHPCS).
+- New features need PHPUnit tests under `tests/TestCase/` using `plugin.Brammo/Auth.Users` fixture.
+- `declare(strict_types=1);`, Cake codesniffer, no `@phpstan-ignore` without justification.
+- See `AGENTS.md` for layout, config keys, and integration steps.
