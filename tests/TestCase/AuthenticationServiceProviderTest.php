@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Test\TestCase;
 
+use Authentication\AuthenticationService;
 use Brammo\Auth\AuthenticationServiceProvider;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
@@ -175,14 +176,76 @@ class AuthenticationServiceProviderTest extends TestCase
      */
     public function testGetAuthenticationServiceDefaultSessionKeyAndCookieName(): void
     {
-        // Ensure no custom values are set
         Configure::delete('Auth.Authentication.sessionKey');
         Configure::delete('Auth.Authentication.cookieName');
 
         $request = ServerRequestFactory::fromGlobals();
 
         $service = $this->provider->getAuthenticationService($request);
+        $this->assertInstanceOf(AuthenticationService::class, $service);
 
-        $this->assertInstanceOf('Authentication\AuthenticationServiceInterface', $service);
+        $authenticators = $service->getConfig('authenticators');
+        $this->assertSame('Auth', $authenticators['Authentication.Session']['sessionKey']);
+        $this->assertSame('CookieAuth', $authenticators['Authentication.Cookie']['cookie']['name']);
+        $this->assertSame('remember_me', $authenticators['Authentication.Cookie']['rememberMeField']);
+    }
+
+    /**
+     * Test custom session key and cookie name are applied to authenticators
+     *
+     * @return void
+     */
+    public function testAuthenticatorConfigUsesCustomSessionAndCookie(): void
+    {
+        Configure::write('Auth.Authentication.sessionKey', 'AdminAuth');
+        Configure::write('Auth.Authentication.cookieName', 'AdminCookieAuth');
+        Configure::write('Auth.Authentication.rememberMeField', 'stay_logged_in');
+
+        $request = ServerRequestFactory::fromGlobals();
+        $service = $this->provider->getAuthenticationService($request);
+        $this->assertInstanceOf(AuthenticationService::class, $service);
+
+        $authenticators = $service->getConfig('authenticators');
+        $this->assertSame('AdminAuth', $authenticators['Authentication.Session']['sessionKey']);
+        $this->assertSame('AdminCookieAuth', $authenticators['Authentication.Cookie']['cookie']['name']);
+        $this->assertSame('stay_logged_in', $authenticators['Authentication.Cookie']['rememberMeField']);
+    }
+
+    /**
+     * Test authentication finder is passed to the password identifier
+     *
+     * @return void
+     */
+    public function testAuthenticationFinderConfiguration(): void
+    {
+        Configure::write('Auth.Authentication.finder', 'active');
+
+        $request = ServerRequestFactory::fromGlobals();
+        $service = $this->provider->getAuthenticationService($request);
+        $this->assertInstanceOf(AuthenticationService::class, $service);
+
+        $identifier = $service->getConfig('authenticators')['Authentication.Form']['identifier'];
+        $passwordConfig = $identifier['Authentication.Password'];
+        $resolver = $passwordConfig['resolver'];
+
+        $this->assertSame('active', $resolver['finder']);
+        $this->assertSame('Brammo/Auth.Users', $resolver['userModel']);
+    }
+
+    /**
+     * Test cookie authenticator receives remember-me field configuration when loaded
+     *
+     * @return void
+     */
+    public function testCookieAuthenticatorRememberMeField(): void
+    {
+        Configure::write('Auth.Authentication.rememberMeField', 'stay_logged_in');
+
+        $request = ServerRequestFactory::fromGlobals();
+        $service = $this->provider->getAuthenticationService($request);
+        $this->assertInstanceOf(AuthenticationService::class, $service);
+
+        $cookie = $service->loadAuthenticator('Authentication.Cookie');
+        $this->assertSame('stay_logged_in', $cookie->getConfig('rememberMeField'));
     }
 }

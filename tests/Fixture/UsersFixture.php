@@ -24,7 +24,7 @@ class UsersFixture extends TestFixture
      */
     public array $fields = [
         'id' => ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'autoIncrement' => true],
-        'name' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
+        'name' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null],
         'email' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
         'password' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null],
         'status' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => 'new'],

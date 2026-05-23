@@ -128,6 +128,16 @@ $config = [
          * Default: 'CookieAuth'
          */
         'cookieName' => 'CookieAuth',
+
+        /**
+         * Remember me form field
+         *
+         * Name of the checkbox field on the login form that triggers
+         * the cookie authenticator to persist the session.
+         *
+         * Default: 'remember_me'
+         */
+        'rememberMeField' => 'remember_me',
     ],
 
     /**
@@ -166,6 +176,15 @@ $config = [
          * Shown when a new/unactivated user attempts to log in.
          */
         'notActivated' => 'Your account is not yet activated',
+
+        /**
+         * Enumerate account status on failed login
+         *
+         * When true (default), users with a matching email receive specific
+         * messages for blocked or not-yet-activated accounts. When false,
+         * only the invalid credentials message is shown (reduces account enumeration).
+         */
+        'enumerateAccounts' => true,
     ],
 ];
 

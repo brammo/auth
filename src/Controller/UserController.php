@@ -146,10 +146,10 @@ class UserController extends AppController
     private function showLoginError(): void
     {
         $email = $this->getRequest()->getData('email');
-        $messages = Configure::read('Auth.Messages');
+        $messages = Configure::read('Auth.Messages', []);
+        $enumerateAccounts = Configure::read('Auth.Messages.enumerateAccounts', true);
 
-        // Try to find user by email to check their status
-        if ($email) {
+        if ($enumerateAccounts && $email) {
             $Users = $this->fetchTable(Configure::read('Auth.Users.table'));
             $user = $Users->find()
                 ->where(['email' => $email])
@@ -162,7 +162,7 @@ class UserController extends AppController
                     return;
                 }
 
-                if ($user->status === User::STATUS_NEW) {
+                if ($user->isStatusNew()) {
                     $this->Flash->error(__($messages['notActivated'] ?? 'Your account is not yet activated'));
 
                     return;

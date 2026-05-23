@@ -53,7 +53,10 @@ class UserControllerTest extends TestCase
             'invalidCredentials' => 'Invalid email or password',
             'blocked' => 'Your account has been blocked',
             'notActivated' => 'Your account is not yet activated',
+            'enumerateAccounts' => true,
         ]);
+
+        $this->enableRetainFlashMessages();
     }
 
     /**
@@ -113,8 +116,7 @@ class UserControllerTest extends TestCase
         ]);
 
         $this->assertResponseOk();
-        // Flash messages don't persist in integration tests without session middleware
-        // $this->assertFlashMessage('Invalid email or password', 'error');
+        $this->assertFlashMessage('Invalid email or password');
     }
 
     /**
@@ -206,8 +208,7 @@ class UserControllerTest extends TestCase
         ]);
 
         $this->assertResponseOk();
-        // Flash messages don't persist in integration tests without session middleware
-        // $this->assertFlashMessage('Invalid email or password', 'error');
+        $this->assertFlashMessage('Invalid email or password');
     }
 
     /**
@@ -226,8 +227,7 @@ class UserControllerTest extends TestCase
         ]);
 
         $this->assertResponseOk();
-        // Flash messages don't persist in integration tests without session middleware
-        // $this->assertFlashMessage('Invalid email or password', 'error');
+        $this->assertFlashMessage('Invalid email or password');
     }
 
     /**
@@ -245,9 +245,9 @@ class UserControllerTest extends TestCase
             'password' => 'password',
         ]);
 
-        // Should not authenticate - stays on login page
         $this->assertResponseOk();
         $this->assertNoRedirect();
+        $this->assertFlashMessage('Your account has been blocked');
     }
 
     /**
@@ -265,9 +265,9 @@ class UserControllerTest extends TestCase
             'password' => 'password',
         ]);
 
-        // Should not authenticate - stays on login page
         $this->assertResponseOk();
         $this->assertNoRedirect();
+        $this->assertFlashMessage('Your account is not yet activated');
     }
 
     /**
@@ -304,9 +304,31 @@ class UserControllerTest extends TestCase
             'password' => 'wrongpassword',
         ]);
 
-        // Should show blocked message (user exists but is blocked)
         $this->assertResponseOk();
         $this->assertNoRedirect();
+        $this->assertFlashMessage('Your account has been blocked');
+    }
+
+    /**
+     * Test enumerateAccounts disabled shows generic message for blocked user
+     *
+     * @return void
+     */
+    public function testEnumerateAccountsDisabled(): void
+    {
+        Configure::write('Auth.Messages.enumerateAccounts', false);
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post('/login', [
+            'email' => 'blocked@example.com',
+            'password' => 'password',
+        ]);
+
+        $this->assertResponseOk();
+        $this->assertNoRedirect();
+        $this->assertFlashMessage('Invalid email or password');
     }
 
     /**

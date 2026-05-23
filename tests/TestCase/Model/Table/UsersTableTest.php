@@ -76,14 +76,37 @@ class UsersTableTest extends TestCase
      */
     public function testValidationDefault(): void
     {
-        $user = $this->Users->newEmptyEntity();
-        $user = $this->Users->patchEntity($user, []);
+        $user = $this->Users->newEntity([
+            'email' => '',
+            'password' => '',
+        ]);
 
         $errors = $user->getErrors();
 
-        // Should have errors for required fields
-        $this->assertArrayHasKey('name', $errors);
         $this->assertArrayHasKey('email', $errors);
+        $this->assertArrayNotHasKey('name', $errors);
+    }
+
+    /**
+     * Test user can be created without a name
+     *
+     * @return void
+     */
+    public function testCreateUserWithoutName(): void
+    {
+        $data = [
+            'email' => 'noname@example.com',
+            'password' => 'password123',
+            'status' => User::STATUS_ACTIVE,
+        ];
+
+        $user = $this->Users->newEntity($data);
+
+        $this->assertEmpty($user->getErrors());
+        $result = $this->Users->save($user);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertNull($result->name);
     }
 
     /**

@@ -30,6 +30,7 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
         $finder = Configure::read('Auth.Authentication.finder', 'all');
         $sessionKey = Configure::read('Auth.Authentication.sessionKey', 'Auth');
         $cookieName = Configure::read('Auth.Authentication.cookieName', 'CookieAuth');
+        $rememberMeField = Configure::read('Auth.Authentication.rememberMeField', 'remember_me');
 
         // Define identifier configuration
         $identifier = [
@@ -59,6 +60,7 @@ class AuthenticationServiceProvider implements AuthenticationServiceProviderInte
                     'fields' => $fields,
                     'loginUrl' => $loginUrl,
                     'identifier' => $identifier,
+                    'rememberMeField' => $rememberMeField,
                     'cookie' => [
                         'name' => $cookieName,
                     ],

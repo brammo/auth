@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Brammo\Auth\Model\Entity;
 
-use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Authentication\PasswordHasher\PasswordHasherFactory;
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
 
 /**
@@ -65,11 +66,15 @@ class User extends Entity
      */
     protected function _setPassword(string $password): ?string
     {
-        if (!empty($password)) {
-            return (new DefaultPasswordHasher())->hash($password);
+        if ($password === '') {
+            return null;
         }
 
-        return null;
+        $passwordHasher = Configure::read('Auth.Authentication.passwordHasher', [
+            'className' => 'Authentication.Default',
+        ]);
+
+        return PasswordHasherFactory::build($passwordHasher)->hash($password);
     }
 
     /**
@@ -90,5 +95,17 @@ class User extends Entity
     public function isBlocked(): bool
     {
         return $this->status === self::STATUS_BLOCKED;
+    }
+
+    /**
+     * Check if user status is new (not yet activated)
+     *
+     * Do not name this method isNew() — it would override Entity::isNew() used by the ORM.
+     *
+     * @return bool
+     */
+    public function isStatusNew(): bool
+    {
+        return $this->status === self::STATUS_NEW;
     }
 }

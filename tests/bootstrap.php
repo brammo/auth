@@ -101,7 +101,7 @@ $connection = ConnectionManager::get('test');
 // Users table schema - matches UsersFixture::$fields
 $usersSchema = new TableSchema('users');
 $usersSchema->addColumn('id', ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'autoIncrement' => true]);
-$usersSchema->addColumn('name', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
+$usersSchema->addColumn('name', ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null]);
 $usersSchema->addColumn('email', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
 $usersSchema->addColumn('password', ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null]);
 $usersSchema->addColumn('status', ['type' => 'string', 'length' => 20, 'null' => false, 'default' => 'new']);

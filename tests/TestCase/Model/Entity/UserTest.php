@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Brammo\Auth\Test\TestCase\Model\Entity;
 
 use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Authentication\PasswordHasher\PasswordHasherFactory;
 use Brammo\Auth\Model\Entity\User;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -28,6 +30,10 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
+        Configure::write('Auth.Authentication.passwordHasher', [
+            'className' => 'Authentication.Default',
+        ]);
+
         $this->User = new User([
             'id' => 1,
             'email' => 'test@example.com',
@@ -44,6 +50,7 @@ class UserTest extends TestCase
     protected function tearDown(): void
     {
         unset($this->User);
+        Configure::delete('Auth');
 
         parent::tearDown();
     }
@@ -338,6 +345,58 @@ class UserTest extends TestCase
 
         $user->status = User::STATUS_NEW;
         $this->assertFalse($user->isBlocked());
+    }
+
+    /**
+     * Test isNew method returns true for new status
+     *
+     * @return void
+     */
+    public function testIsStatusNewWithNewStatus(): void
+    {
+        $user = new User(['status' => User::STATUS_NEW]);
+        $this->assertTrue($user->isStatusNew());
+    }
+
+    /**
+     * Test isStatusNew method returns false for other statuses
+     *
+     * @return void
+     */
+    public function testIsStatusNewWithOtherStatuses(): void
+    {
+        $user = new User(['status' => User::STATUS_ACTIVE]);
+        $this->assertFalse($user->isStatusNew());
+
+        $user->status = User::STATUS_BLOCKED;
+        $this->assertFalse($user->isStatusNew());
+    }
+
+    /**
+     * Test Entity::isNew() is not overridden by status helpers
+     *
+     * @return void
+     */
+    public function testEntityIsNewTracksPersistence(): void
+    {
+        $user = new User(['status' => User::STATUS_NEW, 'email' => 'a@example.com']);
+        $this->assertTrue($user->isNew());
+    }
+
+    /**
+     * Test password hashing uses configured password hasher
+     *
+     * @return void
+     */
+    public function testPasswordUsesConfiguredHasher(): void
+    {
+        $plainPassword = 'configuredHasherPassword';
+
+        $user = new User();
+        $user->password = $plainPassword;
+
+        $hasher = PasswordHasherFactory::build(Configure::read('Auth.Authentication.passwordHasher'));
+        $this->assertTrue($hasher->check($plainPassword, $user->password));
     }
 
     /**

@@ -286,6 +286,8 @@ can be logged into the frontend and admin areas independently.
 |---|---|---|
 | `Auth.Authentication.sessionKey` | `Auth` | Session key for storing user identity |
 | `Auth.Authentication.cookieName` | `CookieAuth` | Name of the "remember me" cookie |
+| `Auth.Authentication.rememberMeField` | `remember_me` | Login form field that enables the remember-me cookie |
+| `Auth.Messages.enumerateAccounts` | `true` | Show blocked/not-activated messages when email exists |
 
 ### User Status
 
@@ -311,6 +313,7 @@ Configure custom error messages for blocked and inactive users:
     'invalidCredentials' => 'Invalid email or password',
     'blocked' => 'Your account has been blocked. Please contact support.',
     'notActivated' => 'Your account is not yet activated. Please check your email.',
+    'enumerateAccounts' => true,  // Set false to always show invalidCredentials
 ],
 ```
 
@@ -326,6 +329,10 @@ if ($user->isActive()) {
 
 if ($user->isBlocked()) {
     // User is blocked
+}
+
+if ($user->isStatusNew()) {
+    // User is not yet activated
 }
 
 // Set user status
@@ -413,7 +420,7 @@ Represents a user with:
 - Hidden password field in JSON output
 - Mass-assignable fields (email, password, name, status)
 - Status constants: `STATUS_ACTIVE`, `STATUS_NEW`, `STATUS_BLOCKED`
-- Helper methods: `isActive()`, `isBlocked()`
+- Helper methods: `isActive()`, `isBlocked()`, `isStatusNew()`
 
 ### UsersTable
 

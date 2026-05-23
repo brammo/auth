@@ -12,11 +12,19 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @method \Brammo\Auth\Model\Entity\User newEntity(array $data, array $options = [])
- * @method array<\Brammo\Auth\Model\Entity\User> newEntities(array $data, array $options = [])
- * @method \Brammo\Auth\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \Brammo\Auth\Model\Entity\User findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method array<\Brammo\Auth\Model\Entity\User> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Brammo\Auth\Model\Entity\User newEmptyEntity()
+ * @method \Brammo\Auth\Model\Entity\User newEntity(array<string, mixed> $data, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User> newEntities(array<string, mixed> $data, array<string, mixed> $options = [])
+ * @method \Brammo\Auth\Model\Entity\User get(mixed $primaryKey, array<string, mixed> $options = [])
+ * @method \Brammo\Auth\Model\Entity\User findOrCreate(array<string, mixed> $search, ?callable $callback = null, array<string, mixed> $options = [])
+ * @method \Brammo\Auth\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array<string, mixed> $data, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User> patchEntities(iterable<\Cake\Datasource\EntityInterface> $entities, array<string, mixed> $data, array<string, mixed> $options = [])
+ * @method \Brammo\Auth\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, array<string, mixed> $options = [])
+ * @method \Brammo\Auth\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User> saveMany(iterable<\Cake\Datasource\EntityInterface> $entities, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User> saveManyOrFail(iterable<\Cake\Datasource\EntityInterface> $entities, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User>|false deleteMany(iterable<\Cake\Datasource\EntityInterface> $entities, array<string, mixed> $options = [])
+ * @method list<\Brammo\Auth\Model\Entity\User> deleteManyOrFail(iterable<\Cake\Datasource\EntityInterface> $entities, array<string, mixed> $options = [])
  * @extends \Cake\ORM\Table<array<string, \Cake\ORM\Behavior>, \Brammo\Auth\Model\Entity\User>
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -50,8 +58,7 @@ class UsersTable extends Table
         $validator
             ->scalar('name')
             ->maxLength('name', 255)
-            ->notEmptyString('name')
-            ->requirePresence('name', 'create');
+            ->allowEmptyString('name');
 
         $validator
             ->email('email')
