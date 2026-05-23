@@ -5,7 +5,7 @@ login/logout functionality, and configurable authentication services.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CakePHP](https://img.shields.io/badge/CakePHP-5.0-red.svg)](https://cakephp.org)
-[![PHP Version](https://img.shields.io/badge/PHP-8.1+-blue.svg)](https://php.net)
+[![PHP Version](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
 
 ## Features
 
@@ -17,8 +17,8 @@ login/logout functionality, and configurable authentication services.
 
 ## Requirements
 
-- PHP 8.1 or higher
-- CakePHP 5.0 or higher
+- PHP 8.2 or higher
+- CakePHP 5.3 or higher
 - CakePHP Authentication 3.0 or higher
 
 ## Installation
