@@ -7,17 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.0] - 2026-04-20
+## [1.2.0] - 2026-05-23
 
 ### Added
+- `Auth.Messages.enumerateAccounts` config to disable status-specific login error messages
+- `Auth.Authentication.rememberMeField` config for cookie "remember me" checkbox (default: `remember_me`)
 - `Auth.Authentication.sessionKey` config option to customize the session key (default: `Auth`)
 - `Auth.Authentication.cookieName` config option to customize the remember-me cookie name (default: `CookieAuth`)
-- Allows using the plugin in multiple contexts (e.g., frontend and admin) without session/cookie conflicts
 - `Auth.Authentication.rehashPasswords` config option to control password rehashing on login
-- Password rehashing is now disabled by default for better performance
-- Tests for password rehashing behavior with config option
+- `User::isStatusNew()` status helper (not `isNew()` — conflicts with `Entity::isNew()`)
+- Bulgarian locale file for plugin template domain `brammo_auth`
+- `docs/I18N.md` with translation extraction instructions
+
+### Changed
+- Login template strings use `__d('brammo_auth', …)` domain
+- `name` field is optional on create (matches database schema)
+- Entity password hashing uses `Auth.Authentication.passwordHasher` configuration
+- Password rehashing disabled by default (`Auth.Authentication.rehashPasswords` defaults to `false`)
+- Minimum PHP version 8.2 (was 8.1)
+- Minimum CakePHP version 5.3 (was 5.0)
+- Minimum `cakephp/migrations` version 5.0 (was 4.0)
 
 ### Fixed
+- Duplicate flash render call on login template
+- PHPStan level 8 compliance for `UsersTable` PHPDoc
 - PHPStan and Psalm errors
 
 ## [1.1.0] - 2025-11-27
@@ -146,6 +159,7 @@ bin/cake migrations migrate -p Brammo/Auth
 bin/cake migrations seed -p Brammo/Auth --seed UsersSeed
 ```
 
-[Unreleased]: https://github.com/brammo/auth/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/brammo/auth/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/brammo/auth/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/brammo/auth/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/brammo/auth/releases/tag/v1.0.0
